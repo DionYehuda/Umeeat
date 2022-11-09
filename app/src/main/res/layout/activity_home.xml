@@ -9,6 +9,10 @@
         android:id="@+id/hmToolbar"
         layout="@layout/home_toolbar"/>
 
+    <include
+        android:id="@+id/hmNavbar"
+        layout="@layout/navbar"/>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
