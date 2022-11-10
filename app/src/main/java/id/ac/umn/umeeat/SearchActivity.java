@@ -13,7 +13,7 @@ public class SearchActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         toolbar = findViewById(R.id.hmToolbar);
-        toolbar.setTitle("Chat");
+        toolbar.setTitle("Search");
         toolbar.setTitleTextColor(getResources().getColor(R.color.black));
     }
 }

@@ -42,17 +42,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                if(username.isEmpty() || password.isEmpty()){
-                    Toast.makeText(LoginActivity.this,
-                            "Username dan password tidak boleh kosong", Toast.LENGTH_SHORT).show();
-                }else{
-                    if(username.equals("Dion") && password.equals("12345")){
+//                if(username.isEmpty() || password.isEmpty()){
+//                    Toast.makeText(LoginActivity.this,
+//                            "Username dan password tidak boleh kosong", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    if(username.equals("Dion") && password.equals("12345")){
                         Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(homeact);
-                    }else{
-                        Toast.makeText(LoginActivity.this, username+password, Toast.LENGTH_SHORT).show();
-                    }
-                }
+//                    }else{
+//                        Toast.makeText(LoginActivity.this, username+password, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
             }
         });
 
