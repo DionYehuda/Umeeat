@@ -22,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+
+                Bundle b = new Bundle();
+                b.putString("uname", "");
+                b.putString("pass", "");
+
+                intent.putExtras(b);
                 startActivity(intent);
             }
         });

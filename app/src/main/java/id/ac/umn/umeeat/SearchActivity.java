@@ -12,8 +12,8 @@ public class SearchActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        toolbar = findViewById(R.id.hmToolbar);
-        toolbar.setTitle("Search");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
+//        toolbar = findViewById(R.id.hmToolbar);
+//        toolbar.setTitle("Search");
+//        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
     }
 }
