@@ -23,10 +23,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         btnLogin = findViewById(R.id.btnLogin);
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
+        etUsername = findViewById(R.id.etUname);
+        etPassword = findViewById(R.id.etPass);
         tvRegister = findViewById(R.id.tvRegister);
-        toolbar = findViewById(R.id.lgnToolbar);
 
         toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.arrow_back_hitam));
