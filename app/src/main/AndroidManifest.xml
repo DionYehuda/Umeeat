@@ -18,14 +18,17 @@
         <activity android:name=".ProfileActivity"
             android:exported="false"/>
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
