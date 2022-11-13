@@ -7,10 +7,6 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <include
-        android:id="@+id/chtToolbar"
-        layout="@layout/home_toolbar" />
-
     <FrameLayout
         android:id="@+id/layoutPhoto"
         android:layout_width="40dp"
