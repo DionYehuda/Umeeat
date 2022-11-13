@@ -18,9 +18,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        hmToolbar = findViewById(R.id.hmToolbar);
-        hmToolbar.setTitle("Home");
-        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
+//        hmToolbar = findViewById(R.id.hmToolbar);
+//        hmToolbar.setTitle("Home");
+//        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
         btnChat = findViewById(R.id.btnChat);
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
