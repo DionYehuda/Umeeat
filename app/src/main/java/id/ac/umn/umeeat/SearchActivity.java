@@ -1,24 +1,47 @@
 package id.ac.umn.umeeat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class SearchActivity extends AppCompatActivity  {
 
     private Toolbar toolbar;
+    private ImageButton toHome, toSearch, toProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-//        toolbar = findViewById(R.id.hmToolbar);
-//        toolbar.setTitle("Search");
-//        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
+        setContentView(R.layout.activity_search);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(getDrawable(R.drawable.toolbar_frame));
+
+        toHome = findViewById(R.id.ibMessage);
+        toSearch = findViewById(R.id.ibSearch);
+        toProfile = findViewById(R.id.ibProfileView);
+
+        toHome.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+            startActivity(intent);
+        });
+
+        toSearch.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), SearchActivity.class);
+            startActivity(intent);
+        });
+
+        toProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

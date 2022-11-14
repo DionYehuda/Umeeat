@@ -8,22 +8,25 @@
 
     <ImageButton
         android:id="@+id/ibMessage"
-        android:layout_width="131dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:src="@drawable/message"
-        android:background="@color/blue"/>
+        android:background="@color/blue"
+        android:layout_weight="1"/>
 
     <ImageButton
         android:id="@+id/ibSearch"
-        android:layout_width="131dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:src="@drawable/search_user"
-        android:background="@color/blue"/>
+        android:background="@color/blue"
+        android:layout_weight="1"/>
 
     <ImageButton
         android:id="@+id/ibProfileView"
-        android:layout_width="131dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:src="@drawable/profile_user"
-        android:background="@color/blue"/>
+        android:background="@color/blue"
+        android:layout_weight="1"/>
 </LinearLayout>

@@ -1,5 +1,15 @@
 package id.ac.umn.umeeat;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,22 +17,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ChatActivity extends AppCompatActivity {
-
     private Toolbar chtToolbar;
     private EditText etChat;
     protected List<String> listSent;
@@ -31,7 +30,8 @@ public class ChatActivity extends AppCompatActivity {
     AdapterChat adapterChat;
     RecyclerView rvChat;
     private String usernameIn;
-    private FrameLayout btnSent;
+    private FrameLayout btnSent, btnGambar;
+    private ImageView gambar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
         listSent = new ArrayList<>();
         Seed();
         rvChat = findViewById(R.id.rvChat);
-        linearLayoutManager = new LinearLayoutManager(this, linearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvChat.setLayoutManager(linearLayoutManager);
         adapterChat = new AdapterChat(this, listSent, listReceived);
         rvChat.setAdapter(adapterChat);
@@ -54,20 +54,33 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("placeholder");
 
         btnSent = findViewById(R.id.btnSent);
-        btnSent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!etChat.getText().toString().isEmpty()) {
-                    listSent.add("me:" + etChat.getText().toString());
-                    etChat.setText("");
-                    adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
-                    rvChat.setAdapter(adapterChat);
-                    adapterChat.notifyDataSetChanged();
-                }
+        btnSent.setOnClickListener(view -> {
+            if(!etChat.getText().toString().isEmpty()) {
+                listSent.add("me:" + etChat.getText().toString());
+                etChat.setText("");
+                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
+                rvChat.setAdapter(adapterChat);
+                adapterChat.notifyDataSetChanged();
             }
         });
 
+        gambar = findViewById(R.id.gambar);
+        btnGambar = findViewById(R.id.layoutPhoto);
+        btnGambar.setOnClickListener(view -> {
+            Intent takePictureIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null)
+                startActivityForResult(takePictureIntent, 1);
+        });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle extras = data.getExtras();
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+        gambar.setImageBitmap(imageBitmap);
+    }
+
     protected void Seed(){
         listSent.add("me:Halo boleh kenalan ga?");
         listReceived.add("other:Boleh");
