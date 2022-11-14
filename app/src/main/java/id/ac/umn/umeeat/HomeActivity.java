@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,9 +27,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        hmToolbar = findViewById(R.id.hmToolbar);
-        hmToolbar.setTitle("Home");
-        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Home");
+//        hmToolbar = findViewById(R.id.hmToolbar);
+//        hmToolbar.setTitle("Home");
+//        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
         chatListView =findViewById(R.id.chatrecyclerview);
 
         if(initRun)
