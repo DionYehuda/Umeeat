@@ -31,12 +31,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Home");
-//        hmToolbar = findViewById(R.id.hmToolbar);
-//        hmToolbar.setTitle("Home");
-//        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().hide();
+        hmToolbar = findViewById(R.id.hmToolbar);
+        hmToolbar.setTitle("Home");
+        hmToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         chatListView =findViewById(R.id.chatrecyclerview);
 
         toHome = findViewById(R.id.ibMessage);
@@ -53,9 +54,6 @@ public class HomeActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(this, friendUName, lastChat);
         chatListView.setAdapter(chatAdapter);
         chatListView.setLayoutManager(new LinearLayoutManager(this));
-
-//        btnChat = findViewById(R.id.btnChat);
-//        btnChat.setOnClickListener(view -> startActivity(new Intent(HomeActivity.this, ChatActivity.class)));
 
         String userName = getIntent().getStringExtra("MyUsername");
         greet = findViewById(R.id.greeting);
