@@ -35,7 +35,15 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public int getItemViewType(int position){
-        return position%2;
+        String str = listMessage.get(position);
+        String[] arrofstr = str.split(":",2);
+        if(arrofstr[0].equals("me")){
+            return 0;
+        }else{
+            return 1;
+        }
+
+
     }
 
     @Override
@@ -61,11 +69,11 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String str = listMessage.get(position);
         String[] arrofstr = str.split(":",2);
         if(arrofstr[0].equals("me")){
-            HolderDataOne holderDataOne = (HolderDataOne) holder;
-            holderDataOne.tvsent.setText(listMessage.get(position));
-        } else {
-            HolderDataTwo holderDataTwo = (HolderDataTwo) holder;
-            holderDataTwo.tvreceive.setText(listMessage.get(position));
+            HolderDataOne holderDataOne =  (HolderDataOne) holder;
+            holderDataOne.tvsent.setText(arrofstr[1]);
+        } else if(arrofstr[0].equals("other")) {
+            HolderDataTwo holderDataTwo =  (HolderDataTwo) holder;
+            holderDataTwo.tvreceive.setText(arrofstr[1]);
         }
     }
 

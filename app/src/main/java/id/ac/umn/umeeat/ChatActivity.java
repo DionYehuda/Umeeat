@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,23 +57,15 @@ public class ChatActivity extends AppCompatActivity {
         btnSent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listSent.add("me:" + etChat.getText().toString());
-                etChat.setText("");
-                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
-                rvChat.setAdapter(adapterChat);
+                if(!etChat.getText().toString().isEmpty()) {
+                    listSent.add("me:" + etChat.getText().toString());
+                    etChat.setText("");
+                    adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
+                    rvChat.setAdapter(adapterChat);
+                    adapterChat.notifyDataSetChanged();
+                }
             }
         });
-
-//        chtToolbar = findViewById(R.id.chtToolbar);
-//        chtToolbar.setTitleTextColor(getResources().getColor(R.color.black));
-//        chtToolbar.setTitle("Ayang");
-//        chtToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_baseline_arrow_back_ios_24));
-//        chtToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
 
     }
     protected void Seed(){
@@ -81,5 +75,14 @@ public class ChatActivity extends AppCompatActivity {
         listReceived.add("other:boleeh, dimana?");
         listSent.add("me:di MCD SDC aja oke ga?");
         listReceived.add("other:okee, hari kamis ya");
+    }
+
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
