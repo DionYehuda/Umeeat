@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     if(username.equals(usernameIn) && password.equals(passwordIn)){
                         Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
+                        homeact.putExtra("MyUsername", username);
                         startActivity(homeact);
                     }
                     else
