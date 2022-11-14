@@ -1,7 +1,10 @@
 package id.ac.umn.umeeat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -19,6 +22,7 @@ public class HomeActivity extends AppCompatActivity {
     private static boolean initRun = true;
     private Toolbar hmToolbar;
     private Button btnChat;
+    private ImageButton toHome, toSearch, toProfile;
     private TextView greet;
     private RecyclerView chatListView;
     private ChatAdapter chatAdapter;
@@ -34,6 +38,10 @@ public class HomeActivity extends AppCompatActivity {
 //        hmToolbar.setTitle("Home");
 //        hmToolbar.setTitleTextColor(getResources().getColor(R.color.black));
         chatListView =findViewById(R.id.chatrecyclerview);
+
+        toHome = findViewById(R.id.ibMessage);
+        toSearch = findViewById(R.id.ibSearch);
+        toProfile = findViewById(R.id.ibProfileView);
 
         if(initRun)
         {
@@ -52,5 +60,29 @@ public class HomeActivity extends AppCompatActivity {
         String userName = getIntent().getStringExtra("MyUsername");
         greet = findViewById(R.id.greeting);
         greet.setText("Hey, "+userName+"!\nWho are you eating with today?");
+
+        toHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
