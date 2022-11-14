@@ -5,11 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/hmToolbar"
-        layout="@layout/home_toolbar"
-        />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +49,10 @@
         android:background="@android:color/black"
         android:layout_marginBottom="10dp"/>
 
-    <include layout="@layout/recycler_chat" />
+    <include
+        layout="@layout/recycler_chat"
+        android:layout_width="match_parent"
+        android:layout_height="380dp" />
 
     <include
         layout="@layout/foot_navbar"

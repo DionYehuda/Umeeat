@@ -24,8 +24,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
 
 //        Bundle b = getIntent().getExtras();
@@ -95,12 +95,11 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         Intent intent;
         switch(item.getItemId()){
-            case R.id.menuHome:
-                intent = new Intent(ProfileActivity.this, HomeActivity.class);
-                startActivity(intent);
+            case android.R.id.home:
+                finish();
                 return true;
             case R.id.logout:
-                intent = new Intent(ProfileActivity.this, MainActivity.class);
+                intent = new Intent(id.ac.umn.umeeat.ProfileActivity.this, MainActivity.class);
                 Bundle b = new Bundle();
                 b.putString("uname", "");
                 b.putString("pass", "");
