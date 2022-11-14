@@ -40,22 +40,22 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
-                Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-                homeact.putExtra("MyUsername", username);
-                startActivity(homeact);
+//                Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
+//                homeact.putExtra("MyUsername", username);
+//                startActivity(homeact);
 
-//                if(username.isEmpty() || password.isEmpty())
-//                    Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
-//                else{
-//                    if(username.equals(usernameIn) && password.equals(passwordIn)){
-//                        Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-//                        homeact.putExtra("MyUsername", username);
-//                        startActivity(homeact);
-//                    }
-//                    else
-//                        Toast.makeText(LoginActivity.this, "Username/ password salah!", Toast.LENGTH_SHORT).show();
-////                    Toast.makeText(getApplicationContext(), usernameIn + passwordIn, Toast.LENGTH_SHORT).show();
-//                }
+                if(username.isEmpty() || password.isEmpty())
+                    Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
+                else{
+                    if(username.equals(usernameIn) && password.equals(passwordIn)){
+                        Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
+                        homeact.putExtra("MyUsername", username);
+                        startActivity(homeact);
+                    }
+                    else
+                        Toast.makeText(LoginActivity.this, "Username/ password salah!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), usernameIn + passwordIn, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

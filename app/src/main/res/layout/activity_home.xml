@@ -55,4 +55,9 @@
         android:layout_marginBottom="10dp"/>
 
     <include layout="@layout/recycler_chat" />
+
+    <include
+        layout="@layout/foot_navbar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"/>
 </LinearLayout>
