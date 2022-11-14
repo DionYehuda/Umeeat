@@ -21,6 +21,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.listSent = listSent;
         this.listReceive = listReceive;
         listMessage = new ArrayList<>();
+
         for(int i = 0; i<listReceive.size()+listSent.size(); i++){
             if(i < listSent.size())
                 if(!listSent.get(i).isEmpty()){
@@ -57,7 +58,9 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(position%2 == 0){
+        String str = listMessage.get(position);
+        String[] arrofstr = str.split(":",2);
+        if(arrofstr[0].equals("me")){
             HolderDataOne holderDataOne = (HolderDataOne) holder;
             holderDataOne.tvsent.setText(listMessage.get(position));
         } else {
