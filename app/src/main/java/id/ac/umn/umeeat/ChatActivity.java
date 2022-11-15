@@ -80,7 +80,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle extras = data.getExtras();
         Bitmap imageBitmap = (Bitmap) extras.get("data");
-        gambar.setImageBitmap(imageBitmap);
+        adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, imageBitmap);
+        rvChat.setAdapter(adapterChat);
+        adapterChat.notifyDataSetChanged();
+//        gambar.setImageBitmap(imageBitmap);
     }
 
     protected void Seed(){
