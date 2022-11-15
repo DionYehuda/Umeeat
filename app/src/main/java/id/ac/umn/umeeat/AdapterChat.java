@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     List<String> listSent, listReceive, listMessage;
     LayoutInflater layoutInflater;
     List<Bitmap> listphoto = new ArrayList<>();
@@ -43,6 +42,8 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public AdapterChat(Context context, List<String> listSent, List<String>listReceive){
         this.listSent = listSent;
         this.listReceive = listReceive;
+        this.photo = photo;
+        listphoto.add(photo);
         listMessage = new ArrayList<>();
 
         for(int i = 0; i<listReceive.size()+listSent.size(); i++){
@@ -54,6 +55,24 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(!listReceive.get(i).isEmpty()){
                     listMessage.add(listReceive.get(i));
                 }
+        }
+    }
+
+    public AdapterChat(Context context, List<String> listSent, List<String>listReceive){
+        this.listSent = listSent;
+        this.listReceive = listReceive;
+        listMessage = new ArrayList<>();
+
+        for(int i = 0; i<listReceive.size()+listSent.size(); i++){
+            if(i < listSent.size()) {
+                if (!listSent.get(i).isEmpty())
+                    listMessage.add(listSent.get(i));
+            }
+
+            if(i<listReceive.size()) {
+                if (!listReceive.get(i).isEmpty())
+                    listMessage.add(listReceive.get(i));
+            }
         }
     }
 
@@ -85,6 +104,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         layoutInflater = layoutInflater.from(parent.getContext());
         View view;
+
         if(viewType == 0 ){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
             return new HolderDataOne(view);
@@ -117,7 +137,6 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     class HolderDataOne extends RecyclerView.ViewHolder{
-
         TextView tvsent;
 
         public HolderDataOne(@NonNull View itemView) {
@@ -127,7 +146,6 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     class HolderDataTwo extends RecyclerView.ViewHolder{
-
         TextView tvreceive;
 
         public HolderDataTwo(@NonNull View itemView) {
