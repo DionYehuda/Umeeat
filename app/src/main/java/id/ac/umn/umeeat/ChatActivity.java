@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -51,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         Bundle b = getIntent().getExtras();
-        getSupportActionBar().setTitle("placeholder");
+        getSupportActionBar().setTitle("Ayang");
 
         btnSent = findViewById(R.id.btnSent);
         btnSent.setOnClickListener(view -> {
@@ -90,12 +92,26 @@ public class ChatActivity extends AppCompatActivity {
         listReceived.add("other:okee, hari kamis ya");
     }
 
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_chat, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        Intent intent;
+        switch(item.getItemId()){
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.otheruserprofile:
+                intent = new Intent(ChatActivity.this, OtherUserProfileActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
