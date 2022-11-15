@@ -52,16 +52,19 @@ public class HomeActivity extends AppCompatActivity {
 
         toHome.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
 
         toSearch.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
 
         toProfile.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
     }

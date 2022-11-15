@@ -87,13 +87,13 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View view;
         if(viewType == 0 ){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
-            return new HolderDataOne(view);
+            return new id.ac.umn.umeeat.AdapterChat.HolderDataOne(view);
         }else if (viewType == 1){
             view = layoutInflater.inflate(R.layout.item_container_received, parent, false);
-            return new HolderDataTwo(view);
+            return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
         }
         view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
-        return new HolderDataPhoto(view);
+        return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto(view);
     }
 
     @Override
@@ -102,14 +102,14 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String str = listMessage.get(position);
             String[] arrofstr = str.split(":",2);
             if(arrofstr[0].equals("me")){
-                HolderDataOne holderDataOne =  (HolderDataOne) holder;
+                id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne =  (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
                 holderDataOne.tvsent.setText(arrofstr[1]);
             } else if(arrofstr[0].equals("other")) {
-                HolderDataTwo holderDataTwo =  (HolderDataTwo) holder;
+                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
                 holderDataTwo.tvreceive.setText(arrofstr[1]);
             }
         }else{
-            HolderDataPhoto holderDataPhoto =  (HolderDataPhoto) holder;
+            id.ac.umn.umeeat.AdapterChat.HolderDataPhoto holderDataPhoto =  (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto) holder;
             holderDataPhoto.ivphoto.setImageBitmap(photo);
         }
 

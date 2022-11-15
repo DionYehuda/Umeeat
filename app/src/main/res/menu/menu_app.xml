@@ -10,10 +10,6 @@
     tools:context=".ProfileActivity">
 
     <item
-        android:id="@+id/menuHome"
-        android:title="Home"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/logout"
         android:title="Logout"
         android:icon="@drawable/exit"/>
