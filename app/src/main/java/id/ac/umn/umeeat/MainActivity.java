@@ -1,11 +1,11 @@
 package id.ac.umn.umeeat;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button btnLogin, btnRegister;
@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 
                 Bundle b = new Bundle();
-                b.putString("uname", "");
-                b.putString("pass", "");
+                b.putString("uname", "a");
+                b.putString("pass", "a");
 
                 intent.putExtras(b);
                 startActivity(intent);
