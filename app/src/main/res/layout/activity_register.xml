@@ -22,8 +22,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -47,8 +47,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -72,8 +72,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -96,8 +96,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <AutoCompleteTextView
@@ -121,8 +121,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <AutoCompleteTextView
@@ -147,8 +147,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -172,8 +172,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -197,8 +197,8 @@
             android:textColorHint="@color/blue2"
             app:boxStrokeColor="@color/blue2"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="41dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="6dp">
 
             <AutoCompleteTextView
