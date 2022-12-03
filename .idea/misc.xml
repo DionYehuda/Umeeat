@@ -3,14 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout-land/activity_home.xml" value="0.125" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout-land/activity_login.xml" value="0.20105820105820105" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout-land/activity_profile.xml" value="0.16" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout/activity_home.xml" value="0.10454155955441302" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout/activity_login.xml" value="0.264" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout/activity_main.xml" value="0.11911231884057971" />
-        <entry key="..\:/UAS/Mobile/Umeeat/app/src/main/res/layout/activity_profile.xml" value="0.16965811965811967" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/drawable-v24/arrow_back_hitam.xml" value="0.1565" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1565" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/drawable/background_received_message.xml" value="0.1445" />
@@ -22,6 +14,7 @@
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/drawable/toolbar_frame.xml" value="0.1895" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout-land/activity_chat.xml" value="0.176" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout-land/activity_home.xml" value="0.1" />
+        <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout-land/activity_profile.xml" value="0.12433862433862433" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/activity_chat.xml" value="0.12" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/activity_login.xml" value="0.2" />
@@ -35,7 +28,8 @@
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/home_toolbar.xml" value="0.146875" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/item_chat.xml" value="0.25" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/item_container_received.xml" value="0.152" />
-        <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/item_container_sent.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/item_container_sent.xml" value="0.1" />
+        <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/item_container_sent_photo.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/navbar.xml" value="0.2" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/recycler_chat.xml" value="0.25" />
         <entry key="..\:/Users/Dion Yehuda/AndroidStudioProjects/Umeeat/app/src/main/res/layout/toolbar.xml" value="0.14583333333333334" />
