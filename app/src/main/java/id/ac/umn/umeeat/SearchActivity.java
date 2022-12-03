@@ -17,12 +17,14 @@ public class SearchActivity extends AppCompatActivity  {
 
     private Toolbar toolbar;
     private ImageButton toHome, toSearch, toProfile;
+    private String userName;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getDrawable(R.drawable.toolbar_frame));
+        userName = getIntent().getStringExtra("MyUsername");
 
         toHome = findViewById(R.id.ibMessage);
         toSearch = findViewById(R.id.ibSearch);
@@ -30,16 +32,19 @@ public class SearchActivity extends AppCompatActivity  {
 
         toHome.setOnClickListener(view -> {
             Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
 
         toSearch.setOnClickListener(view -> {
             Intent intent = new Intent(getBaseContext(), SearchActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
 
         toProfile.setOnClickListener(view -> {
             Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
+            intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
     }

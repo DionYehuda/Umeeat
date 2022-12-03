@@ -7,7 +7,6 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ChatActivity extends AppCompatActivity {
     private Toolbar chtToolbar;
@@ -104,13 +102,12 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        Intent intent;
         switch(item.getItemId()){
             case android.R.id.home:
                 finish();
                 return true;
             case R.id.otheruserprofile:
-                intent = new Intent(ChatActivity.this, OtherUserProfileActivity.class);
+                Intent intent = new Intent(ChatActivity.this, OtherUserProfileActivity.class);
                 startActivity(intent);
                 return true;
             default:

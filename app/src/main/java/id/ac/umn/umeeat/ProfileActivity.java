@@ -27,6 +27,9 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
+        username = getIntent().getStringExtra("MyUsername");
+        uname = findViewById(R.id.tvUsername);
+        uname.setText(username);
 
 //        Bundle b = getIntent().getExtras();
 //        username = b.getString("uname");
