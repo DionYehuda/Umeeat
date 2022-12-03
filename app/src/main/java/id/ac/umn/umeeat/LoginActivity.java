@@ -31,9 +31,9 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        Bundle b = getIntent().getExtras();
-        usernameIn = b.getString("uname");
-        passwordIn = b.getString("pass");
+//        Bundle b = getIntent().getExtras();
+//        usernameIn = b.getString("uname");
+//        passwordIn = b.getString("pass");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
