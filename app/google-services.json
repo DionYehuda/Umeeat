@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "657398140421",
+    "firebase_url": "https://umeeat-14be9-default-rtdb.firebaseio.com",
+    "project_id": "umeeat-14be9",
+    "storage_bucket": "umeeat-14be9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657398140421:android:efb0659c9cc09c4f1c966c",
+        "android_client_info": {
+          "package_name": "id.ac.umn.umeeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657398140421-2a9ol70jh3lj88b3nmo1l18p7ckofn4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl_FYycyj3eVBorWhkh5EBHhqVV1qtAtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657398140421-2a9ol70jh3lj88b3nmo1l18p7ckofn4s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
