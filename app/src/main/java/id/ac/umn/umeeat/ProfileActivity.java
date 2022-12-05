@@ -31,25 +31,6 @@ public class ProfileActivity extends AppCompatActivity {
         uname = findViewById(R.id.tvUsername);
         uname.setText(username);
 
-//        Bundle b = getIntent().getExtras();
-//        username = b.getString("uname");
-//        angkatan = b.getString("year");
-//        jurusan = b.getString("jurusan");
-//        gender = b.getString("gender");
-//        description = b.getString("desc");
-//
-//        uname = findViewById(R.id.tvUsername);
-//        ang = findViewById(R.id.tvAngkatan);
-//        jur = findViewById(R.id.tvJurusan);
-//        gen = findViewById(R.id.tvGender);
-//        desc = findViewById(R.id.tvDesc);
-//
-//        uname.setText(username);
-//        ang.setText(angkatan);
-//        jur.setText(jurusan);
-//        gen.setText(gender);
-//        desc.setText(description);
-
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("data-regis"));
     }
 
@@ -77,15 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
             desc.setText(description);
         }
     };
-
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                finish();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
