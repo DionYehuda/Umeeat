@@ -1,7 +1,10 @@
 package id.ac.umn.umeeat;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -13,20 +16,27 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
     AutoCompleteTextView year, jurusan, gender;
     TextInputEditText email, pass, nama, uname, desc;
     Button buttonRegis;
     String[] dd1, dd2, dd3;
-    String yearIn, jurusanIn, genderIn, emailIn, passIn, namaIn, unameIn, descIn;
-    UserDAO dao;
+    String uidIn, yearIn, jurusanIn, genderIn, emailIn, passIn, namaIn, unameIn, descIn;
+    UserDAO dao = new UserDAO();
 
-//    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://umeeat-14be9-default-rtdb.firebaseio.com/");
+
+    FirebaseAuth mAuth; //add user
+    FirebaseUser mUser; //get userid by mUser.getUid();
+
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -59,10 +69,9 @@ public class RegisterActivity extends AppCompatActivity {
         uname = findViewById(R.id.acUname);
         desc = findViewById(R.id.acDesc);
         buttonRegis = findViewById(R.id.btnDoRegis);
-        dao = new UserDAO();
 
-        buttonRegis.setOnClickListener(v->{
-            emailIn = email.getText().toString()+"@student.umn.ac.id";
+        buttonRegis.setOnClickListener(v -> {
+            emailIn = email.getText().toString() + "@student.umn.ac.id";
             passIn = pass.getText().toString();
             namaIn = nama.getText().toString();
             yearIn = year.getText().toString();
@@ -71,28 +80,24 @@ public class RegisterActivity extends AppCompatActivity {
             descIn = desc.getText().toString();
             genderIn = gender.getText().toString();
 
-            if(emailIn.isEmpty() || passIn.isEmpty() || namaIn.isEmpty() || yearIn.isEmpty() || jurusanIn.isEmpty() || unameIn.isEmpty() || descIn.isEmpty() || genderIn.isEmpty())
+            if (emailIn.isEmpty() || passIn.isEmpty() || namaIn.isEmpty() || yearIn.isEmpty() || jurusanIn.isEmpty() || unameIn.isEmpty() || descIn.isEmpty() || genderIn.isEmpty())
                 Toast.makeText(RegisterActivity.this, "Data input tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             else {
-                User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
-                dao.add(user).addOnSuccessListener(succ->{
-                    Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
-                    Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil database", Toast.LENGTH_LONG).show();
-                    startActivity(toLogin);
-                }).addOnFailureListener(er-> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
-
-//                Bundle b = new Bundle();
-//                b.putString("email", emailIn);
-//                b.putString("pass", passIn);
-//                b.putString("nama", namaIn);
-//                b.putString("year", yearIn);
-//                b.putString("jurusan", jurusanIn);
-//                b.putString("uname", unameIn);
-//                b.putString("desc", descIn);
-//                b.putString("gender", genderIn);
-
-//                toLogin.putExtras(b);
-//                toApp.putExtras(b);
+                mAuth.createUserWithEmailAndPassword(emailIn, passIn).addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        mUser = mAuth.getCurrentUser();
+                        uidIn = mUser.getUid();
+                        User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
+                        dao.add(user, uidIn).addOnSuccessListener(succ -> {
+                            Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
+                            Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil database", Toast.LENGTH_LONG).show();
+                            startActivity(toLogin);
+                        }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    }
+                });
             }
         });
     }
