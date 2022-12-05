@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity  {
 
@@ -47,6 +51,16 @@ public class SearchActivity extends AppCompatActivity  {
             intent.putExtra("MyUsername", userName);
             startActivity(intent);
         });
+
+        List<String> items = new ArrayList<>();
+        items.add("Male1");
+        items.add("Male2");
+        items.add("Male3");
+
+        RecyclerView recyclerView = findViewById(R.id.searchRecyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager (this));
+        SearchAdapter adapter = new SearchAdapter(items);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
