@@ -3,20 +3,25 @@ package id.ac.umn.umeeat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText etUsername, etPassword;
     private TextView tvRegister;
-    String usernameIn, passwordIn, username, password;
+    String username;
+    String password;
+    FirebaseAuth mAuth;
+    UserDAO dao = new UserDAO();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,45 +31,41 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUname);
         etPassword = findViewById(R.id.etPass);
         tvRegister = findViewById(R.id.tvRegister);
+        mAuth = FirebaseAuth.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-//        Bundle b = getIntent().getExtras();
-//        usernameIn = b.getString("uname");
-//        passwordIn = b.getString("pass");
+        btnLogin.setOnClickListener(view -> {
+            username = etUsername.getText().toString();
+            password = etPassword.getText().toString();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                username = etUsername.getText().toString();
-                password = etPassword.getText().toString();
-                Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-                homeact.putExtra("MyUsername", username);
-                startActivity(homeact);
-
-//                if(username.isEmpty() || password.isEmpty())
-//                    Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
-//                else{
-//                    if(username.equals(usernameIn) && password.equals(passwordIn)){
-//                        Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-//                        homeact.putExtra("MyUsername", username);
-//                        startActivity(homeact);
-//                    }
-//                    else
-//                        Toast.makeText(LoginActivity.this, "Username/ password salah!", Toast.LENGTH_SHORT).show();
-////                    Toast.makeText(getApplicationContext(), usernameIn + passwordIn, Toast.LENGTH_SHORT).show();
-//                }
+            if(username.isEmpty() || password.isEmpty())
+                Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
+            else{
+                dao.loginIterate(username, password, user -> {
+                    if(user != null){
+                        mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPass()).addOnCompleteListener(this, task -> {
+                            if(task.isSuccessful())
+                            {
+                                Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
+                                homeact.putExtra("MyUsername", user.getUname()); //bisa ganti oper usernya langsung.
+                                startActivity(homeact);
+                            }
+                            else
+                            {
+                                Toast.makeText(LoginActivity.this, "Gagal Log In, coba lagi dalam beberapa saat.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else
+                        Toast.makeText(LoginActivity.this, "Username/ password salah!", Toast.LENGTH_SHORT).show();
+                });
             }
         });
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
+        tvRegister.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
