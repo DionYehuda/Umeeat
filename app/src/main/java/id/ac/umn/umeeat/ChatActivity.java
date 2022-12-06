@@ -24,13 +24,13 @@ import java.util.List;
 public class ChatActivity extends AppCompatActivity {
     private Toolbar chtToolbar;
     private EditText etChat;
-    protected List<String> listSent;
+    public List<String> listSent;
     protected List<String> listReceived;
     LinearLayoutManager linearLayoutManager;
     AdapterChat adapterChat;
     RecyclerView rvChat;
     private String usernameIn;
-    private FrameLayout btnSent, btnGambar;
+    private FrameLayout btnSent, btnGambar, btnMaps;
     private ImageView gambar;
 
     @Override
@@ -70,6 +70,12 @@ public class ChatActivity extends AppCompatActivity {
             Intent takePictureIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null)
                 startActivityForResult(takePictureIntent, 1);
+        });
+
+        btnMaps = findViewById(R.id.layoutLocation);
+        btnMaps.setOnClickListener(view -> {
+            Intent openMapIntent = new Intent(ChatActivity.this, MapsActivity.class);
+            startActivity(openMapIntent);
         });
     }
 
