@@ -1,11 +1,19 @@
 package id.ac.umn.umeeat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private UiSettings mapUISet;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Button btnkirim, btnkembali;
+    protected String strlongitude = " ", strlatitude = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+
+        btnkembali = findViewById(R.id.btnmapkembali);
+        btnkembali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnkirim = findViewById(R.id.btnmapkirim);
+        btnkirim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChatActivity chatActivity = new ChatActivity();
+                chatActivity.listSent.add("me:" + "longitude = " + strlongitude + " latitude = " + strlatitude);
+                Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
+                startActivity(intent);
+//                finish();
+            }
+        });
     }
 
     @Override
@@ -54,6 +86,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(loc).title("Location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 20));
+                strlatitude = String.valueOf(location.getLatitude());
+                strlongitude = String.valueOf(location.getLongitude());
             }
 
             @Override
@@ -81,4 +115,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1000, locationListener);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 1000, locationListener);
     }
+
 }

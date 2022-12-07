@@ -50,7 +50,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(!listSent.get(i).isEmpty()){
                     listMessage.add(listSent.get(i));
                 }
-            if(i<listReceive.size())
+            if(i < listReceive.size())
                 if(!listReceive.get(i).isEmpty()){
                     listMessage.add(listReceive.get(i));
                 }
@@ -65,9 +65,11 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return 0;
             }else if(arrofstr[0].equals("other")){
                 return 1;
+            }else if(arrofstr[0].equals("meMaps")){
+                return 2;
             }
         }
-        return 2;
+        return 3;
 
     }
 
@@ -92,6 +94,10 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             view = layoutInflater.inflate(R.layout.item_container_received, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
         }
+        else if (viewType == 2){
+            view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
+            return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
+        }
         view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
         return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto(view);
     }
@@ -105,6 +111,10 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne =  (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
                 holderDataOne.tvsent.setText(arrofstr[1]);
             } else if(arrofstr[0].equals("other")) {
+                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                holderDataTwo.tvreceive.setText(arrofstr[1]);
+            }
+            else if(arrofstr[0].equals("meMpas")){
                 id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
                 holderDataTwo.tvreceive.setText(arrofstr[1]);
             }
@@ -131,6 +141,16 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView tvreceive;
 
         public HolderDataTwo(@NonNull View itemView) {
+            super(itemView);
+            tvreceive = itemView.findViewById(R.id.tvReceive);
+        }
+    }
+
+    class HolderDataMapSent extends RecyclerView.ViewHolder{
+
+        TextView tvreceive;
+
+        public HolderDataMapSent(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
         }
