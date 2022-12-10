@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,9 +9,10 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,37 +21,36 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity  {
 
-    private Toolbar toolbar;
     private ImageButton toHome, toSearch, toProfile;
-    private String userName;
+    private User me;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setBackgroundDrawable(getDrawable(R.drawable.toolbar_frame));
-        userName = getIntent().getStringExtra("MyUsername");
+        me = (User) getIntent().getSerializableExtra("myUser");
 
         toHome = findViewById(R.id.ibMessage);
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
 
         toHome.setOnClickListener(view -> {
-            Intent intent = new Intent(getBaseContext(), HomeActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
+            finish();
         });
 
-        toSearch.setOnClickListener(view -> {
-            Intent intent = new Intent(getBaseContext(), SearchActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
-        });
+//        toSearch.setOnClickListener(view -> {
+//            finish();
+//            Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+//            intent.putExtra("myUser", me);
+//            arl.launch(intent);
+//        });
 
         toProfile.setOnClickListener(view -> {
-            Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
+            Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+            intent.putExtra("myUser", me);
+            arl.launch(intent);
         });
 
         List<String> items = new ArrayList<>();
@@ -84,4 +85,15 @@ public class SearchActivity extends AppCompatActivity  {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    ActivityResultLauncher<Intent> arl = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    Intent logoutIntent = new Intent();
+                    setResult(RESULT_OK, logoutIntent);
+                    finish();
+                }
+            });
 }

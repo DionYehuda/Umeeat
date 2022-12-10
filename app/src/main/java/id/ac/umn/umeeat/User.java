@@ -1,6 +1,8 @@
 package id.ac.umn.umeeat;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String email, pass, nama, year, jurusan, uname, desc, gender;
 
     public User()

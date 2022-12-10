@@ -1,5 +1,5 @@
 package id.ac.umn.umeeat;
 
-public interface MyCallback {
+public interface UserCallback {
     void onCallback(User user);
 }
