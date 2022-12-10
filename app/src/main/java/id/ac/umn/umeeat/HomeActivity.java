@@ -1,10 +1,13 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,12 +24,15 @@ public class HomeActivity extends AppCompatActivity {
     private TextView greet;
     private RecyclerView chatListView;
     private ChatAdapter chatAdapter;
+    private User me;
+    private UserDAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setBackgroundDrawable(getDrawable(R.drawable.toolbar_frame));
         getSupportActionBar().setTitle("Home");
         chatListView =findViewById(R.id.chatrecyclerview);
@@ -35,37 +41,50 @@ public class HomeActivity extends AppCompatActivity {
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
 
+        chatAdapter = new ChatAdapter(this, friendUName, lastChat);
+        chatListView.setAdapter(chatAdapter);
+        chatListView.setLayoutManager(new LinearLayoutManager(this));
+
+        me = (User) getIntent().getSerializableExtra("myUser");
+        greet = findViewById(R.id.greeting);
+        greet.setText("Hey, "+me.getUname()+"!\nWho are you eating with today?");
+
         if(initRun)
         {
+//            dao.chatIterate(me.getUname(), );
             friendUName.add("Ayang");
             lastChat.add("okee, hari kamis ya");
             initRun = false;
         }
 
-        chatAdapter = new ChatAdapter(this, friendUName, lastChat);
-        chatListView.setAdapter(chatAdapter);
-        chatListView.setLayoutManager(new LinearLayoutManager(this));
-
-        String userName = getIntent().getStringExtra("MyUsername");
-        greet = findViewById(R.id.greeting);
-        greet.setText("Hey, "+userName+"!\nWho are you eating with today?");
-
-        toHome.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
-        });
+//        toHome.setOnClickListener(view -> {
+//            finish();
+//            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+//            intent.putExtra("myUser", me);
+//            arl.launch(intent);
+//        });
 
         toSearch.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
+            intent.putExtra("myUser", me);
+            arl.launch(intent);
         });
 
         toProfile.setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-            intent.putExtra("MyUsername", userName);
-            startActivity(intent);
+            intent.putExtra("myUser", me);
+            arl.launch(intent);
         });
     }
+
+    ActivityResultLauncher<Intent> arl = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    Intent logoutIntent = new Intent();
+                    setResult(RESULT_OK, logoutIntent);
+                    finish();
+                }
+            });
 }

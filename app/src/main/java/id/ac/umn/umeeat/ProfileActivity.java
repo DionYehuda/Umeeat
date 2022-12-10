@@ -1,23 +1,21 @@
 package id.ac.umn.umeeat;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
     TextView uname, ang, jur, gen, desc;
-    String username, angkatan, jurusan, gender, description;
+    User me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -25,39 +23,23 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
-        username = getIntent().getStringExtra("MyUsername");
+        me = (User) getIntent().getSerializableExtra("myUser");
+
         uname = findViewById(R.id.tvUsername);
-        uname.setText(username);
+        ang = findViewById(R.id.tvAngkatan);
+        jur = findViewById(R.id.tvJurusan);
+        gen = findViewById(R.id.tvGender);
+        desc = findViewById(R.id.tvDesc);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("data-regis"));
+        uname.setText(me.getUname());
+        ang.setText(me.getYear());
+        jur.setText(me.getJurusan());
+        gen.setText(me.getGender());
+        desc.setText(me.getDesc());
     }
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            username = intent.getStringExtra("uname");
-            angkatan = intent.getStringExtra("year");
-            jurusan = intent.getStringExtra("jurusan");
-            gender = intent.getStringExtra("gender");
-            description = intent.getStringExtra("desc");
-
-            Toast.makeText(getApplicationContext(), "test " + username + angkatan, Toast.LENGTH_SHORT).show();
-
-            uname = findViewById(R.id.tvUsername);
-            ang = findViewById(R.id.tvAngkatan);
-            jur = findViewById(R.id.tvJurusan);
-            gen = findViewById(R.id.tvGender);
-            desc = findViewById(R.id.tvDesc);
-
-            uname.setText(username);
-            ang.setText(angkatan);
-            jur.setText(jurusan);
-            gen.setText(gender);
-            desc.setText(description);
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -74,13 +56,10 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.logout:
-                intent = new Intent(id.ac.umn.umeeat.ProfileActivity.this, MainActivity.class);
-                Bundle b = new Bundle();
-                b.putString("uname", "");
-                b.putString("pass", "");
-
-                intent.putExtras(b);
-                startActivity(intent);
+                FirebaseAuth.getInstance().signOut();
+                Intent logoutIntent = new Intent();
+                setResult(RESULT_OK, logoutIntent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

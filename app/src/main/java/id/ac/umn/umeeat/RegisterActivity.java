@@ -90,12 +90,13 @@ public class RegisterActivity extends AppCompatActivity {
                         User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
                         dao.add(user, uidIn).addOnSuccessListener(succ -> {
                             Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
-                            Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil database", Toast.LENGTH_LONG).show();
+                            Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil masuk", Toast.LENGTH_LONG).show();
                             startActivity(toLogin);
                         }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }

@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,14 +47,16 @@ public class LoginActivity extends AppCompatActivity {
             if(username.isEmpty() || password.isEmpty())
                 Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             else{
+
+
                 dao.loginIterate(username, password, user -> {
                     if(user != null){
                         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPass()).addOnCompleteListener(this, task -> {
                             if(task.isSuccessful())
                             {
                                 Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-                                homeact.putExtra("MyUsername", user.getUname()); //bisa ganti oper usernya langsung.
-                                startActivity(homeact);
+                                homeact.putExtra("myUser", user);
+                                arl.launch(homeact);
                             }
                             else
                             {
@@ -77,4 +82,13 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    ActivityResultLauncher<Intent> arl = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    finish();
+                }
+            });
 }

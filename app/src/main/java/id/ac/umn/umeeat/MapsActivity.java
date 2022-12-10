@@ -1,19 +1,12 @@
 package id.ac.umn.umeeat;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,7 +16,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import id.ac.umn.umeeat.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -33,7 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Button btnkirim, btnkembali;
-    protected String strlongitude = " ", strlatitude = " ";
+    protected String strlongitude = "", strlatitude = "", msg = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,40 +39,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
 
-        btnkembali = findViewById(R.id.btnmapkembali);
-        btnkembali.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                finish();
-                Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            return;
+        }
 
-        btnkirim = findViewById(R.id.btnmapkirim);
-        btnkirim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChatActivity chatActivity = new ChatActivity();
-                chatActivity.listSent.add("me:" + "longitude = " + strlongitude + " latitude = " + strlatitude);
-                Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
-                startActivity(intent);
-//                finish();
-            }
-        });
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mapUISet = mMap.getUiSettings();
-        mapUISet.setZoomControlsEnabled(true);
-
-        locationListener = new LocationListener() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1000, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
@@ -88,6 +58,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 20));
                 strlatitude = String.valueOf(location.getLatitude());
                 strlongitude = String.valueOf(location.getLongitude());
+
+//                Bundle b = new Bundle();
+//                b.putString("lat", strlatitude);
+//                b.putString("lon", strlongitude);
             }
 
             @Override
@@ -104,16 +78,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onProviderDisabled(String provider) {
 
             }
-        };
+        });
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 1000, locationListener);
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+//        btnkembali = findViewById(R.id.btnmapkembali);
+//        btnkembali.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
+//
+//        btnkirim = findViewById(R.id.btnmapkirim);
+//        btnkirim.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ChatActivity chatActivity = new ChatActivity();
+//                chatActivity.listSent.add("me:" + "longitude = " + strlongitude + " latitude = " + strlatitude);
+//                Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
+//
+//                intent.putExtras(b);
+//                startActivity(intent);
+//            }
+//        });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mapUISet = mMap.getUiSettings();
+        mapUISet.setZoomControlsEnabled(true);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             return;
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
         }
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1000, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 1000, locationListener);
+        mMap.setMyLocationEnabled(true);
     }
 
 }
