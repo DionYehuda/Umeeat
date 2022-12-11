@@ -1,7 +1,5 @@
 package id.ac.umn.umeeat;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
@@ -82,35 +80,59 @@ public class UserDAO {
         });
     }
 
-//    public void chatIterate(String username, UserCallback myCallback)
-//    {
-//        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot snap: snapshot.getChildren())
-//                {
-//                    String chatRoom = snap.getValue().toString();
-//                    if(chatRoom.contains(username))
-//                    {
-//                        String[] temp = chatRoom.split("&");
-//                        List<String> chatMembers = Arrays.asList(temp);
-//                        for (int i = 0; i<chatMembers.size(); i++)
-//                        {
-//                            Log.d("chatMembers", chatMembers.get(i));
-//                        }
-//                        chatMembers.remove(username);
-//                        userIterate(chatMembers.get(0), user ->
-//                        {
-//                            myCallback.onCallback(user);
-//                        });
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
+    public void chatIterate(String username, UserCallback myCallback)
+    {
+        chatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HomeActivity.friends.clear();
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    String chatRoom = snap.getKey();
+                    if(chatRoom.contains(username))
+                    {
+                        String[] temp = chatRoom.split("&");
+                        List<String> chatMembers = Arrays.asList(temp);
+                        String chatPartner;
+                        for (int i = 0; i<chatMembers.size(); i++)
+                        {
+                            if(!chatMembers.get(i).equals(username))
+                            {
+                                chatPartner = chatMembers.get(i);
+                                userIterate(chatPartner, myCallback);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void getAllUsers(String username, UserCallback myCallback) {
+        dataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SearchActivity.items.clear();
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(!(username.equals(user.getUname())))
+                    {
+                        myCallback.onCallback(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
