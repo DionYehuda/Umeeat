@@ -33,6 +33,7 @@ public class ChatActivity extends AppCompatActivity {
     private FrameLayout btnSent, btnGambar, btnMaps;
     private ImageView gambar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
