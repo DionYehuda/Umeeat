@@ -11,8 +11,8 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
-    List<String> items;
-    public SearchAdapter(List<String> items){ this.items = items;}
+    List<User> items;
+    public SearchAdapter(List<User> items){ this.items = items;}
 
     @NonNull
     @Override
@@ -24,7 +24,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-        holder.tvNama.setText(items.get(position));
+        holder.tvNama.setText(items.get(position).getUname());
     }
 
     @Override
