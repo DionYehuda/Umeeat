@@ -15,16 +15,16 @@ import java.util.LinkedList;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatItemHolder> {
 
-    private final LinkedList<String> friendUName;
+    private final LinkedList<User> friends;
     private final LinkedList<String> lastChat;
     private final LayoutInflater inflater;
     Context context;
 
-    public ChatAdapter(Context context, LinkedList<String> friendUName, LinkedList<String> lastChat)
+    public ChatAdapter(Context context, LinkedList<User> friends, LinkedList<String> lastChat)
     {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.friendUName = friendUName;
+        this.friends = friends;
         this.lastChat = lastChat;
     }
 
@@ -38,9 +38,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatItemHolder
     @Override
     public void onBindViewHolder(@NonNull ChatItemHolder holder, int position)
     {
-        String friend = friendUName.get(position);
+        User friend = friends.get(position);
         String latest = lastChat.get(position);
-        holder.uName.setText(friend);
+        holder.uName.setText(friend.getUname());
         holder.latestChat.setText(latest);
 //        holder.friendpPic.setBackground();
     }
@@ -48,7 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatItemHolder
     @Override
     public int getItemCount()
     {
-        return friendUName.size();
+        return friends.size();
     }
 
     public class ChatItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener

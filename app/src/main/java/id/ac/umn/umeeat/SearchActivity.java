@@ -3,6 +3,7 @@ package id.ac.umn.umeeat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,8 @@ public class SearchActivity extends AppCompatActivity  {
 
     private ImageButton toHome, toSearch, toProfile;
     private User me;
+    private UserDAO dao = new UserDAO();
+    public static List<User> items = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -36,9 +39,7 @@ public class SearchActivity extends AppCompatActivity  {
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
 
-        toHome.setOnClickListener(view -> {
-            finish();
-        });
+        toHome.setOnClickListener(view -> finish());
 
 //        toSearch.setOnClickListener(view -> {
 //            finish();
@@ -53,15 +54,17 @@ public class SearchActivity extends AppCompatActivity  {
             arl.launch(intent);
         });
 
-        List<String> items = new ArrayList<>();
-        items.add("Male1");
-        items.add("Male2");
-        items.add("Male3");
-
         RecyclerView recyclerView = findViewById(R.id.searchRecyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager (this));
         SearchAdapter adapter = new SearchAdapter(items);
         recyclerView.setAdapter(adapter);
+
+        dao.getAllUsers(me.getUname(), user ->
+        {
+            items.add(user);
+            Log.d("Users", "User: "+user.getUname());
+            adapter.notifyDataSetChanged();
+        });
     }
 
     @Override

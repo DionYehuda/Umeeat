@@ -17,7 +17,8 @@ import java.util.LinkedList;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final LinkedList<String> friendUName = new LinkedList<>();
+//    private static final LinkedList<Chat> friendChats = new LinkedList<>();
+    public static final LinkedList<User> friends = new LinkedList<>();
     private static final LinkedList<String> lastChat = new LinkedList<>();
     private static boolean initRun = true;
     private ImageButton toHome, toSearch, toProfile;
@@ -25,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView chatListView;
     private ChatAdapter chatAdapter;
     private User me;
-    private UserDAO dao;
+    private UserDAO dao = new UserDAO();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -41,7 +42,7 @@ public class HomeActivity extends AppCompatActivity {
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
 
-        chatAdapter = new ChatAdapter(this, friendUName, lastChat);
+        chatAdapter = new ChatAdapter(this, friends, lastChat);
         chatListView.setAdapter(chatAdapter);
         chatListView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -51,10 +52,13 @@ public class HomeActivity extends AppCompatActivity {
 
         if(initRun)
         {
-//            dao.chatIterate(me.getUname(), );
-            friendUName.add("Ayang");
-            lastChat.add("okee, hari kamis ya");
-            initRun = false;
+//            dao.chatIterate(me.getUname(), user -> {friendChats.add(new Chat(user, ));});
+            dao.chatIterate(me.getUname(), user -> {
+                friends.add(user);
+                lastChat.add("okee, hari kamis ya");
+                chatAdapter.notifyDataSetChanged();
+                initRun = false;
+            });
         }
 
 //        toHome.setOnClickListener(view -> {
