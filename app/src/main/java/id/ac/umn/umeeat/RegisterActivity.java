@@ -86,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
                         uidIn = mUser.getUid();
                         User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
                         dao.add(user, uidIn).addOnSuccessListener(succ -> {
+                            finish();
                             Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
                             Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil masuk", Toast.LENGTH_LONG).show();
                             startActivity(toLogin);

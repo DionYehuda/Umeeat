@@ -11,8 +11,8 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
-    List<User> items;
-    public SearchAdapter(List<User> items){ this.items = items;}
+    List<User> listUser;
+    public SearchAdapter(List<User> listUser){ this.listUser = listUser;}
 
     @NonNull
     @Override
@@ -24,11 +24,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-        holder.tvNama.setText(items.get(position).getUname());
+        final User data = listUser.get(position);
+        holder.tvNama.setText(data.getUname());
+        holder.tvJurusan.setText(data.getJurusan());
+        holder.tvAngkatan.setText(data.getYear());
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return listUser.size();
     }
 }
