@@ -20,7 +20,7 @@ public class HomeActivity extends AppCompatActivity {
 //    private static final LinkedList<Chat> friendChats = new LinkedList<>();
     public static final LinkedList<User> friends = new LinkedList<>();
     private static final LinkedList<String> lastChat = new LinkedList<>();
-    private static boolean initRun = true;
+//    private static boolean initRun = true;
     private ImageButton toHome, toSearch, toProfile;
     private TextView greet;
     private RecyclerView chatListView;
@@ -50,16 +50,14 @@ public class HomeActivity extends AppCompatActivity {
         greet = findViewById(R.id.greeting);
         greet.setText("Hey, "+me.getUname()+"!\nWho are you eating with today?");
 
-        if(initRun)
-        {
-//            dao.chatIterate(me.getUname(), user -> {friendChats.add(new Chat(user, ));});
+//        if(initRun)
+//        {
             dao.chatIterate(me.getUname(), user -> {
                 friends.add(user);
                 lastChat.add("okee, hari kamis ya");
                 chatAdapter.notifyDataSetChanged();
-                initRun = false;
             });
-        }
+//        }
 
 //        toHome.setOnClickListener(view -> {
 //            finish();
