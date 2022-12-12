@@ -19,13 +19,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatItemHolder
     private final LinkedList<String> lastChat;
     private final LayoutInflater inflater;
     Context context;
+    User me;
 
-    public ChatAdapter(Context context, LinkedList<User> friends, LinkedList<String> lastChat)
+    public ChatAdapter(Context context, LinkedList<User> friends, LinkedList<String> lastChat, User me)
     {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.friends = friends;
         this.lastChat = lastChat;
+        this.me = me;
     }
 
     @NonNull
@@ -69,7 +71,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatItemHolder
 
         @Override
         public void onClick(View view) {
-            context.startActivity(new Intent(view.getContext(), ChatActivity.class));
+            Intent i = new Intent(view.getContext(), ChatActivity.class);
+            String friendname = friends.get(getAdapterPosition()).getUname();
+            i.putExtra("me", me);
+            i.putExtra("friendname", friendname);
+            context.startActivity(i);
         }
     }
 }

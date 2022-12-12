@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,7 +19,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -32,35 +40,60 @@ public class ChatActivity extends AppCompatActivity {
     private String usernameIn;
     private FrameLayout btnSent, btnGambar, btnMaps;
     private ImageView gambar;
-
+    private User me;
+    private DatabaseReference chatRef;
+    private String chatID;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        index = 2;
+
+        Bundle b = getIntent().getExtras();
+        String friendname = (String) b.get("friendname");
+        me = (User) getIntent().getSerializableExtra("me");
+
+        //database
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        chatID = me.getUname() + "&" + friendname;
+        if(chatID == null)
+            chatID = friendname + "&" + me.getUname();
+        chatRef = db.getReference("Chat").child(chatID);
+
+
         listReceived = new ArrayList<>();
         listSent = new ArrayList<>();
-        Seed();
+
+//        Seed();
         rvChat = findViewById(R.id.rvChat);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvChat.setLayoutManager(linearLayoutManager);
-        adapterChat = new AdapterChat(this, listSent, listReceived);
+        adapterChat = new AdapterChat(this, listSent, listReceived, me, friendname);
         rvChat.setAdapter(adapterChat);
         adapterChat.notifyDataSetChanged();
         etChat = findViewById(R.id.etChat);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        Bundle b = getIntent().getExtras();
-        getSupportActionBar().setTitle("Ayang");
+
+        getSupportActionBar().setTitle(me.getUname());
+        getChat(me, friendname);
+
 
         btnSent = findViewById(R.id.btnSent);
         btnSent.setOnClickListener(view -> {
             if(!etChat.getText().toString().isEmpty()) {
-                listSent.add("me:" + etChat.getText().toString());
+                DatabaseReference newChat;
+                String newchat = me.getUname() + ":" + etChat.getText().toString();
+                newChat = chatRef.child(index+"");
+                newChat.setValue(newchat);
+                index++;
+//                listSent.add("me:" + etChat.getText().toString());
                 etChat.setText("");
-                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
+                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
                 rvChat.setAdapter(adapterChat);
                 adapterChat.notifyDataSetChanged();
             }
@@ -121,5 +154,21 @@ public class ChatActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void getChat(User me, String frienduname){
+        chatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    listSent.add(snap.getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
