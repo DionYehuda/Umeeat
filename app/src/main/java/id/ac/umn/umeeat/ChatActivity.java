@@ -125,14 +125,14 @@ public class ChatActivity extends AppCompatActivity {
 //        gambar.setImageBitmap(imageBitmap);
     }
 
-    protected void Seed(){
-        listSent.add("me:Halo boleh kenalan ga?");
-        listReceived.add("other:Boleh");
-        listSent.add("me:Mau makan bareng ga hari kamis?");
-        listReceived.add("other:boleeh, dimana?");
-        listSent.add("me:di MCD SDC aja oke ga?");
-        listReceived.add("other:okee, hari kamis ya");
-    }
+//    protected void Seed(){
+//        listSent.add("me:Halo boleh kenalan ga?");
+//        listReceived.add("other:Boleh");
+//        listSent.add("me:Mau makan bareng ga hari kamis?");
+//        listReceived.add("other:boleeh, dimana?");
+//        listSent.add("me:di MCD SDC aja oke ga?");
+//        listReceived.add("other:okee, hari kamis ya");
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
