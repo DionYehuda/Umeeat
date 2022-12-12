@@ -3,7 +3,7 @@ package id.ac.umn.umeeat;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String email, pass, nama, year, jurusan, uname, desc, gender;
+    private String email, pass, nama, year, jurusan, uname, desc, gender, key;
 
     public User()
     {
