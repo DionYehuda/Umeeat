@@ -17,6 +17,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         btnLogin.setOnClickListener(view -> {
-            username = etUsername.getText().toString();
+            username = etUsername.getText().toString().trim();
             password = etPassword.getText().toString();
 
             if(username.isEmpty() || password.isEmpty())
@@ -55,9 +56,19 @@ public class LoginActivity extends AppCompatActivity {
                         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPass()).addOnCompleteListener(this, task -> {
                             if(task.isSuccessful())
                             {
-                                Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
-                                homeact.putExtra("myUser", user);
-                                arl.launch(homeact);
+                                FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if(fbUser.isEmailVerified())
+                                {
+                                    Intent homeact = new Intent(LoginActivity.this, HomeActivity.class);
+                                    homeact.putExtra("myUser", user);
+                                    arl.launch(homeact);
+                                }
+                                else
+                                {
+                                    Toast.makeText(LoginActivity.this, "Email belum verified, In case yang lama expired, kita kirim email baru.\ncoba cek email...", Toast.LENGTH_SHORT).show();
+                                    fbUser.sendEmailVerification();
+                                    FirebaseAuth.getInstance().signOut();
+                                }
                             }
                             else
                             {

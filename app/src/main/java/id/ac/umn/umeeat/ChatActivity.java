@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,31 +38,25 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     AdapterChat adapterChat;
     RecyclerView rvChat;
-    private String usernameIn;
+    private String usernameIn, friendname;
     private FrameLayout btnSent, btnGambar, btnMaps;
     private ImageView gambar;
     private User me;
-    private DatabaseReference chatRef;
-    private String chatID;
-    private int index;
+    private DatabaseReference chatRef, chatRoom;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        index = 2;
-
         Bundle b = getIntent().getExtras();
-        String friendname = (String) b.get("friendname");
+        friendname = (String) b.get("friendname");
         me = (User) getIntent().getSerializableExtra("me");
 
         //database
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        chatID = me.getUname() + "&" + friendname;
-        if(chatID == null)
-            chatID = friendname + "&" + me.getUname();
-        chatRef = db.getReference("Chat").child(chatID);
+        chatRef = db.getReference("Chat");
 
 
         listReceived = new ArrayList<>();
@@ -73,28 +68,29 @@ public class ChatActivity extends AppCompatActivity {
         rvChat.setLayoutManager(linearLayoutManager);
         adapterChat = new AdapterChat(this, listSent, listReceived, me, friendname);
         rvChat.setAdapter(adapterChat);
-        adapterChat.notifyDataSetChanged();
         etChat = findViewById(R.id.etChat);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle(me.getUname());
-        getChat(me, friendname);
-
+        getSupportActionBar().setTitle(friendname);
+        getChat(new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
+                rvChat.setAdapter(adapterChat);
+            }
+        });
 
         btnSent = findViewById(R.id.btnSent);
         btnSent.setOnClickListener(view -> {
             if(!etChat.getText().toString().isEmpty()) {
                 DatabaseReference newChat;
                 String newchat = me.getUname() + ":" + etChat.getText().toString();
-                newChat = chatRef.child(index+"");
+                newChat = chatRoom.child(adapterChat.getItemCount()+"");
                 newChat.setValue(newchat);
-                index++;
 //                listSent.add("me:" + etChat.getText().toString());
                 etChat.setText("");
-                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
-                rvChat.setAdapter(adapterChat);
                 adapterChat.notifyDataSetChanged();
             }
         });
@@ -156,12 +152,24 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public void getChat(User me, String frienduname){
+    public void getChat(UserCallback myCallback){
         chatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listSent.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    listSent.add(snap.getValue(String.class));
+                    String chatId = snap.getKey();
+                    if(chatId.contains(me.getUname()) && chatId.contains(friendname))
+                    {
+                        chatRoom = snap.getRef();
+                        snap.getChildren();
+                        for (DataSnapshot snap1 : snap.getChildren())
+                        {
+                            listSent.add(snap1.getValue(String.class));
+                        }
+                        myCallback.onCallback(me);
+                        return;
+                    }
                 }
             }
 

@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
@@ -34,6 +35,31 @@ public class UserDAO {
             return null;
     }
 
+    public void checkIfUnique(String username, FoundCallback myCallback)
+    {
+        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(username.equalsIgnoreCase(user.getUname()))
+                    {
+                        myCallback.onCallback(false);
+                        return;
+                    }
+                }
+                myCallback.onCallback(true);
+                return;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void loginIterate(String username, String pass, UserCallback myCallback)
     {
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -42,7 +68,7 @@ public class UserDAO {
                 for (DataSnapshot snap: snapshot.getChildren())
                 {
                     User user = snap.getValue(User.class);
-                    if(username.equals(user.getUname()) && pass.equals(user.getPass()))
+                    if(username.equalsIgnoreCase(user.getUname()) && pass.equals(user.getPass()))
                     {
                         myCallback.onCallback(user);
                         return;
@@ -65,7 +91,7 @@ public class UserDAO {
                 for (DataSnapshot snap: snapshot.getChildren())
                 {
                     User user = snap.getValue(User.class);
-                    if(username.equals(user.getUname()))
+                    if(username.equalsIgnoreCase(user.getUname()))
                     {
                         myCallback.onCallback(user);
                         return;
@@ -96,7 +122,7 @@ public class UserDAO {
                         String chatPartner;
                         for (int i = 0; i<chatMembers.size(); i++)
                         {
-                            if(!chatMembers.get(i).equals(username))
+                            if(!chatMembers.get(i).equalsIgnoreCase(username))
                             {
                                 chatPartner = chatMembers.get(i);
                                 userIterate(chatPartner, myCallback);
@@ -122,7 +148,7 @@ public class UserDAO {
                 for (DataSnapshot snap: snapshot.getChildren())
                 {
                     User user = snap.getValue(User.class);
-                    if(!(username.equals(user.getUname())))
+                    if(!(username.equalsIgnoreCase(user.getUname())))
                     {
                         myCallback.onCallback(user);
                     }
@@ -131,6 +157,78 @@ public class UserDAO {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void searchUserByAngkatan(String username, UserCallback myCallback, String kueri){
+        Query query = dataRef.orderByChild("year").equalTo(kueri);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SearchActivity.items.clear();
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(!(username.equalsIgnoreCase(user.getUname())))
+                    {
+                        myCallback.onCallback(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                SearchActivity.items.clear();
+            }
+        });
+    }
+
+    public void searchUserByJurusan(String username, UserCallback myCallback, String kueri){
+        Query query = dataRef.orderByChild("jurusan").equalTo(kueri);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SearchActivity.items.clear();
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(!(username.equalsIgnoreCase(user.getUname())))
+                    {
+                        myCallback.onCallback(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                SearchActivity.items.clear();
+
+            }
+        });
+    }
+
+    public void searchUserByGender(String username, UserCallback myCallback, String kueri){
+        Query query = dataRef.orderByChild("gender").equalTo(kueri);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SearchActivity.items.clear();
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(!(username.equalsIgnoreCase(user.getUname())))
+                    {
+                        myCallback.onCallback(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                SearchActivity.items.clear();
 
             }
         });

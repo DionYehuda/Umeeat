@@ -17,6 +17,7 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
     public SearchViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        ivGender = itemView.findViewById(R.id.ivGender);
         tvNama = itemView.findViewById(R.id.tvNama);
         tvAngkatan = itemView.findViewById(R.id.tvAngkatan);
         tvJurusan = itemView.findViewById(R.id.tvJurusan);
