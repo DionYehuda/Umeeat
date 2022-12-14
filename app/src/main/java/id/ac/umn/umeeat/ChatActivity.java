@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,14 +44,12 @@ public class ChatActivity extends AppCompatActivity {
     private User me;
     private DatabaseReference chatRef;
     private String chatID;
-    private int index;
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-        index = 2;
 
         Bundle b = getIntent().getExtras();
         String friendname = (String) b.get("friendname");
@@ -79,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle(me.getUname());
+        getSupportActionBar().setTitle(friendname);
         getChat(me, friendname);
 
 
@@ -160,8 +159,12 @@ public class ChatActivity extends AppCompatActivity {
         chatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                index = 0;
+                listSent.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     listSent.add(snap.getValue(String.class));
+                    index++;
+                    Log.d("listsentsize", listSent.size()+"");
                 }
             }
 

@@ -49,14 +49,14 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.friendname = friendname;
         listMessage = new ArrayList<>();
 
-        for(int i = 0; i<listReceive.size()+listSent.size(); i++){
-            if(i < listSent.size())
-                if(!listSent.get(i).isEmpty()){
-                    listMessage.add(listSent.get(i));
+        for(int i = 0; i<this.listReceive.size()+this.listSent.size(); i++){
+            if(i < this.listSent.size())
+                if(!this.listSent.get(i).isEmpty()){
+                    listMessage.add(this.listSent.get(i));
                 }
-            if(i < listReceive.size())
-                if(!listReceive.get(i).isEmpty()){
-                    listMessage.add(listReceive.get(i));
+            if(i < this.listReceive.size())
+                if(!this.listReceive.get(i).isEmpty()){
+                    listMessage.add(this.listReceive.get(i));
                 }
         }
     }
