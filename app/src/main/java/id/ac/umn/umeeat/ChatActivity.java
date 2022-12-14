@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -41,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView gambar;
     private User me;
     private DatabaseReference chatRef, chatRoom;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
         rvChat = findViewById(R.id.rvChat);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvChat.setLayoutManager(linearLayoutManager);
-        adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
+        adapterChat = new AdapterChat(this, listSent, listReceived, me, friendname);
         rvChat.setAdapter(adapterChat);
         etChat = findViewById(R.id.etChat);
 
@@ -84,7 +87,6 @@ public class ChatActivity extends AppCompatActivity {
             if(!etChat.getText().toString().isEmpty()) {
                 DatabaseReference newChat;
                 String newchat = me.getUname() + ":" + etChat.getText().toString();
-                Log.d("ChatCount", adapterChat.getItemCount()+"");
                 newChat = chatRoom.child(adapterChat.getItemCount()+"");
                 newChat.setValue(newchat);
 //                listSent.add("me:" + etChat.getText().toString());
