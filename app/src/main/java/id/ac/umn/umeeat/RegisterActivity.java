@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
     AutoCompleteTextView year, jurusan, gender;
@@ -68,33 +70,59 @@ public class RegisterActivity extends AppCompatActivity {
         buttonRegis = findViewById(R.id.btnDoRegis);
 
         buttonRegis.setOnClickListener(v -> {
-            emailIn = email.getText().toString() + "@student.umn.ac.id";
-            passIn = pass.getText().toString();
-            namaIn = nama.getText().toString();
+            emailIn = email.getText().toString().trim() + "@student.umn.ac.id";
+            passIn = pass.getText().toString().trim();
+            namaIn = nama.getText().toString().trim();
             yearIn = year.getText().toString();
             jurusanIn = jurusan.getText().toString();
-            unameIn = uname.getText().toString();
-            descIn = desc.getText().toString();
+            unameIn = uname.getText().toString().trim();
+            descIn = desc.getText().toString().trim();
             genderIn = gender.getText().toString();
+            Activity curr = this;
 
             if (emailIn.isEmpty() || passIn.isEmpty() || namaIn.isEmpty() || yearIn.isEmpty() || jurusanIn.isEmpty() || unameIn.isEmpty() || descIn.isEmpty() || genderIn.isEmpty())
                 Toast.makeText(RegisterActivity.this, "Data input tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             else {
-                mAuth.createUserWithEmailAndPassword(emailIn, passIn).addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        mUser = mAuth.getCurrentUser();
-                        uidIn = mUser.getUid();
-                        User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
-                        dao.add(user, uidIn).addOnSuccessListener(succ -> {
-                            finish();
-                            Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
-                            Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, "Berhasil masuk", Toast.LENGTH_LONG).show();
-                            startActivity(toLogin);
-                        }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
-                    } else {
-                        // If sign in fails, display a message to the user.
-//                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(id.ac.umn.umeeat.RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                dao.checkIfUnique(unameIn, unique -> {
+                    if(unique)
+                    {
+                        mAuth.createUserWithEmailAndPassword(emailIn, passIn).addOnCompleteListener(curr, task -> {
+                            if (task.isSuccessful()) {
+                                mUser = mAuth.getCurrentUser();
+                                mUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(unameIn).build());
+                                uidIn = mUser.getUid();
+                                if(mUser != null)
+                                {
+                                    Toast.makeText(RegisterActivity.this, "Email Verifikasi telah dikirim, cek di student email untuk konfirmasi\n!Kalau gaada di inbox, coba cek spam!", Toast.LENGTH_LONG).show();
+                                    mUser.sendEmailVerification().addOnCompleteListener(task1 -> {
+                                        if(task1.isSuccessful())
+                                        {
+                                            User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
+                                            dao.add(user, uidIn).addOnSuccessListener(succ -> {
+                                                finish();
+                                                FirebaseAuth.getInstance().signOut();
+                                                Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
+                                                startActivity(toLogin);
+                                            }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
+                                        }
+                                        else
+                                        {
+                                            overridePendingTransition(0, 0);
+                                            finish();
+                                            overridePendingTransition(0, 0);
+                                            startActivity(getIntent());
+                                        }
+                                    });
+                                }
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Toast.makeText(RegisterActivity.this, "Username sudah digunakan", Toast.LENGTH_LONG).show();
                     }
                 });
             }

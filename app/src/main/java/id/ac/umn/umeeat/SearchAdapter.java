@@ -11,6 +11,7 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
+    private String gender;
     List<User> listUser;
     public SearchAdapter(List<User> listUser){ this.listUser = listUser;}
 
@@ -28,6 +29,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         holder.tvNama.setText(data.getUname());
         holder.tvJurusan.setText(data.getJurusan());
         holder.tvAngkatan.setText(data.getYear());
+
+        gender = data.getGender();
+        if(gender.equals("Laki-Laki")){
+            holder.ivGender.setImageResource(R.drawable.male);
+        }
+        else if (gender.equals("Perempuan")){
+            holder.ivGender.setImageResource(R.drawable.female);
+        }else{
+            holder.ivGender.setImageResource(R.drawable.gender);
+        }
+
+
+
     }
 
     @Override
