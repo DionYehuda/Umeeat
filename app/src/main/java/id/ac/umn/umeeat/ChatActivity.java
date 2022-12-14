@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,38 +36,59 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     AdapterChat adapterChat;
     RecyclerView rvChat;
-    private String usernameIn;
+    private String usernameIn, friendname;
     private FrameLayout btnSent, btnGambar, btnMaps;
     private ImageView gambar;
+    private User me;
+    private DatabaseReference chatRef, chatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        Bundle b = getIntent().getExtras();
+        friendname = (String) b.get("friendname");
+        me = (User) getIntent().getSerializableExtra("me");
+
+        //database
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        chatRef = db.getReference("Chat");
+
+
         listReceived = new ArrayList<>();
         listSent = new ArrayList<>();
-        Seed();
+
+//        Seed();
         rvChat = findViewById(R.id.rvChat);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvChat.setLayoutManager(linearLayoutManager);
-        adapterChat = new AdapterChat(this, listSent, listReceived);
+        adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
         rvChat.setAdapter(adapterChat);
-        adapterChat.notifyDataSetChanged();
         etChat = findViewById(R.id.etChat);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        Bundle b = getIntent().getExtras();
-        getSupportActionBar().setTitle("Ayang");
+
+        getSupportActionBar().setTitle(friendname);
+        getChat(new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
+                rvChat.setAdapter(adapterChat);
+            }
+        });
 
         btnSent = findViewById(R.id.btnSent);
         btnSent.setOnClickListener(view -> {
             if(!etChat.getText().toString().isEmpty()) {
-                listSent.add("me:" + etChat.getText().toString());
+                DatabaseReference newChat;
+                String newchat = me.getUname() + ":" + etChat.getText().toString();
+                Log.d("ChatCount", adapterChat.getItemCount()+"");
+                newChat = chatRoom.child(adapterChat.getItemCount()+"");
+                newChat.setValue(newchat);
+//                listSent.add("me:" + etChat.getText().toString());
                 etChat.setText("");
-                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived);
-                rvChat.setAdapter(adapterChat);
                 adapterChat.notifyDataSetChanged();
             }
         });
@@ -91,14 +119,14 @@ public class ChatActivity extends AppCompatActivity {
 //        gambar.setImageBitmap(imageBitmap);
     }
 
-    protected void Seed(){
-        listSent.add("me:Halo boleh kenalan ga?");
-        listReceived.add("other:Boleh");
-        listSent.add("me:Mau makan bareng ga hari kamis?");
-        listReceived.add("other:boleeh, dimana?");
-        listSent.add("me:di MCD SDC aja oke ga?");
-        listReceived.add("other:okee, hari kamis ya");
-    }
+//    protected void Seed(){
+//        listSent.add("me:Halo boleh kenalan ga?");
+//        listReceived.add("other:Boleh");
+//        listSent.add("me:Mau makan bareng ga hari kamis?");
+//        listReceived.add("other:boleeh, dimana?");
+//        listSent.add("me:di MCD SDC aja oke ga?");
+//        listReceived.add("other:okee, hari kamis ya");
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -120,5 +148,33 @@ public class ChatActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void getChat(UserCallback myCallback){
+        chatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listSent.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    String chatId = snap.getKey();
+                    if(chatId.contains(me.getUname()) && chatId.contains(friendname))
+                    {
+                        chatRoom = snap.getRef();
+                        snap.getChildren();
+                        for (DataSnapshot snap1 : snap.getChildren())
+                        {
+                            listSent.add(snap1.getValue(String.class));
+                        }
+                        myCallback.onCallback(me);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

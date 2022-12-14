@@ -2,6 +2,7 @@ package id.ac.umn.umeeat;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     LayoutInflater layoutInflater;
     List<Bitmap> listphoto = new ArrayList<>();
     Bitmap photo;
+    User me;
+    String friendname;
 
     public AdapterChat(Context context, List<String> listSent, List<String>listReceive, Bitmap photo){
         this.listSent = listSent;
@@ -40,9 +43,11 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public AdapterChat(Context context, List<String> listSent, List<String>listReceive){
+    public AdapterChat(Context context, List<String> listSent, List<String>listReceive, User me, String friendname){
         this.listSent = listSent;
         this.listReceive = listReceive;
+        this.me = me;
+        this.friendname = friendname;
         listMessage = new ArrayList<>();
 
         for(int i = 0; i<listReceive.size()+listSent.size(); i++){
@@ -61,9 +66,9 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(position < listMessage.size()){
             String str = listMessage.get(position);
             String[] arrofstr = str.split(":",2);
-            if(arrofstr[0].equals("me")){
+            if(arrofstr[0].equals(me.getUname())){
                 return 0;
-            }else if(arrofstr[0].equals("other")){
+            }else if(arrofstr[0].equals(friendname)){
                 return 1;
             }else if(arrofstr[0].equals("meMaps")){
                 return 2;
@@ -107,10 +112,10 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(position < listMessage.size() ){
             String str = listMessage.get(position);
             String[] arrofstr = str.split(":",2);
-            if(arrofstr[0].equals("me")){
+            if(arrofstr[0].equals(me.getUname())){
                 id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne =  (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
                 holderDataOne.tvsent.setText(arrofstr[1]);
-            } else if(arrofstr[0].equals("other")) {
+            } else if(arrofstr[0].equals(friendname)) {
                 id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
                 holderDataTwo.tvreceive.setText(arrofstr[1]);
             }

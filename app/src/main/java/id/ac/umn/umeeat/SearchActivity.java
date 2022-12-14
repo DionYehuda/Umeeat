@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +26,7 @@ public class SearchActivity extends AppCompatActivity  {
 
     private ImageButton toHome, toSearch, toProfile;
     private ImageView ivCancel;
+    private TextView tvFilter;
     private User me;
     private UserDAO dao = new UserDAO();
     public static List<User> items = new ArrayList<>();
@@ -42,6 +44,7 @@ public class SearchActivity extends AppCompatActivity  {
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
         ivCancel = findViewById(R.id.ivCancel);
+        tvFilter = findViewById(R.id.tvFilter);
 
         toHome.setOnClickListener(view -> finish());
 
@@ -59,6 +62,7 @@ public class SearchActivity extends AppCompatActivity  {
                 Log.d("Users", "User: "+user.getUname());
                 adapter.notifyDataSetChanged();
             });
+            tvFilter.setText("...");
         });
 
         toProfile.setOnClickListener(view -> {
@@ -94,10 +98,12 @@ public class SearchActivity extends AppCompatActivity  {
         switch(item.getItemId()){
 //            Untuk jenis kelamin
             case R.id.Gender:
+                tvFilter.setText("Gender");
                 Toast.makeText(SearchActivity.this, "Mohon pilih jenis kelamin", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.Male:
+                tvFilter.setText("Gender:Male");
                 dao.searchUserByGender(me.getUname(), user ->
                 {
                     items.add(user);
@@ -107,6 +113,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Female:
+                tvFilter.setText("Gender:Female");
                 dao.searchUserByGender(me.getUname(), user ->
                 {
                     items.add(user);
@@ -117,10 +124,12 @@ public class SearchActivity extends AppCompatActivity  {
 
 //                Untuk angkatan
             case R.id.Angkatan:
+                tvFilter.setText("Angkatan");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Angkatan ", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.tahun2017:
+                tvFilter.setText("Angkatan:2017");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -130,6 +139,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.tahun2018:
+                tvFilter.setText("Angkatan:2018");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -139,6 +149,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.tahun2019:
+                tvFilter.setText("Angkatan:2019");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -148,6 +159,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.tahun2020:
+                tvFilter.setText("Angkatan:2020");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -157,6 +169,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.tahun2021:
+                tvFilter.setText("Angkatan:2021");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -166,6 +179,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.tahun2022:
+                tvFilter.setText("Angkatan:2022");
                 dao.searchUserByAngkatan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -176,25 +190,31 @@ public class SearchActivity extends AppCompatActivity  {
 
                 // Untuk jurusan
             case R.id.Jurusan:
+                tvFilter.setText("Jurusan");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Fakultas", Toast.LENGTH_SHORT).show();
 
             case R.id.FakultasTeknik:
+                tvFilter.setText("Jurusan:Fakultas Teknik dan Informasi");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Jurusan", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.FakultasBisnis:
+                tvFilter.setText("Jurusan:Fakultas Bisnis");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Jurusan", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.FakultasIlmuKomunikasi:
+                tvFilter.setText("Jurusan:Fakultas Ilmu Komunikasi");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Jurusan", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.FakultasSeni:
+                tvFilter.setText("Jurusan: Fakultas Seni dan Budaya");
                 Toast.makeText(SearchActivity.this, "Mohon pilih Jurusan", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.Informatika:
+                tvFilter.setText("Jurusan: Fakultas Teknik dan Informasi-Informatika");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -204,6 +224,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.TeknikKomputer:
+                tvFilter.setText("Jurusan: Fakultas Teknik dan Informasi-Teknik Komputer");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -213,6 +234,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.TeknikElektro:
+                tvFilter.setText("Jurusan: Fakultas Teknik dan Informasi-Teknik Elektro");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -222,6 +244,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.TeknikFisika:
+                tvFilter.setText("Jurusan: Fakultas Teknik dan Informasi-Teknik Fisika");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -231,6 +254,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.SistemInformasi:
+                tvFilter.setText("Jurusan: Fakultas Teknik dan Informasi-Sistem Informasi");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -240,6 +264,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Perhotelan:
+                tvFilter.setText("Jurusan : Fakultas Bisnis-Perhotelan");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -249,6 +274,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Akuntansi:
+                tvFilter.setText("Jurusan : Fakultas Bisnis-Akuntansi");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -258,6 +284,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Managemen:
+                tvFilter.setText("Jurusan : Fakultas Bisnis-Manajemen");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -267,6 +294,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.KomunikasiStrategis:
+                tvFilter.setText("Jurusan : Fakultas Ilmu Komunikasi-Komunikasi Strategis");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -276,6 +304,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Jurnalistik:
+                tvFilter.setText("Jususan : Fakultas Ilmu Komunikasi-Jurnalistik");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -285,6 +314,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.DKV:
+                tvFilter.setText("Jurusan : Fakultas Seni dan Budaya-DKV");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -294,6 +324,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Arsitektur:
+                tvFilter.setText("Jurusan : Fakultas Seni dan Budaya-Arsitektur");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);
@@ -303,6 +334,7 @@ public class SearchActivity extends AppCompatActivity  {
                 return true;
 
             case R.id.Film:
+                tvFilter.setText("Jurusan : Fakultas Seni dan Budaya-Film dan Animasi");
                 dao.searchUserByJurusan(me.getUname(), user ->
                 {
                     items.add(user);

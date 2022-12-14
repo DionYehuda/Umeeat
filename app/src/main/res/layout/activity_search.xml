@@ -15,6 +15,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
+                android:id="@+id/tvFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -22,7 +23,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="30dp"
                 android:text="Filter : ..."
-                android:textSize="25sp" />
+                android:textSize="10sp" />
 
             <ImageView
                 android:id="@+id/ivCancel"
@@ -49,16 +50,13 @@
                 android:id="@+id/tvAjakan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:text="What do you waiting for? Go ask a friend for a lunch!"
+                android:text="What are you waiting for? Go ask a friend for a lunch!"
                 android:textColor="@color/black"
-                android:textSize="30dp"
+                android:textSize="10dp"
+                android:textAlignment="center"
                 android:layout_marginBottom="75dp"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold" />
-
-
-
 
     </TableLayout>
     </ScrollView>

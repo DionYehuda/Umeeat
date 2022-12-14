@@ -42,23 +42,22 @@ public class HomeActivity extends AppCompatActivity {
         toSearch = findViewById(R.id.ibSearch);
         toProfile = findViewById(R.id.ibProfileView);
 
-        chatAdapter = new ChatAdapter(this, friends, lastChat);
+        me = (User) getIntent().getSerializableExtra("myUser");
+        chatAdapter = new ChatAdapter(this, friends, lastChat, me);
         chatListView.setAdapter(chatAdapter);
         chatListView.setLayoutManager(new LinearLayoutManager(this));
 
-        me = (User) getIntent().getSerializableExtra("myUser");
         greet = findViewById(R.id.greeting);
         greet.setText("Hey, "+me.getUname()+"!\nWho are you eating with today?");
 
-//        if(initRun)
-//        {
-            dao.chatIterate(me.getUname(), user -> {
-                friends.add(user);
-                lastChat.add("okee, hari kamis ya");
-                chatAdapter.notifyDataSetChanged();
-            });
-//        }
+        //Add chat rooms
+        dao.chatIterate(me.getUname(), user -> {
+            friends.add(user);
+            lastChat.add("okee, hari kamis ya");
+            chatAdapter.notifyDataSetChanged();
+        });
 
+        //Footer Intents
 //        toHome.setOnClickListener(view -> {
 //            finish();
 //            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
