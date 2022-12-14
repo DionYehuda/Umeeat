@@ -12,7 +12,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -20,44 +20,44 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
                 android:text="Filter : ..."
-                android:textSize="25sp">
+                android:textSize="25sp" />
 
-            </TextView>
             <ImageView
                 android:id="@+id/ivCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="0dp"
                 android:adjustViewBounds="true"
                 android:maxHeight="50dp"
                 android:src="@drawable/ic_outline_cancel_24" />
 
 
+
+
         </TableRow>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="75dp">
-
             <TextView
-                android:id="@+id/tvNama"
+                android:id="@+id/tvAjakan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:text="What do you waiting for? Go ask a friend for a lunch!"
                 android:textColor="@color/black"
                 android:textSize="30dp"
+                android:layout_marginBottom="75dp"
+                android:fontFamily="sans-serif"
                 android:textStyle="bold" />
 
-        </TableRow>
+
 
 
     </TableLayout>
