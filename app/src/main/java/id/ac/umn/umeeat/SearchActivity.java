@@ -30,7 +30,7 @@ public class SearchActivity extends AppCompatActivity  {
     private User me;
     private UserDAO dao = new UserDAO();
     public static List<User> items = new ArrayList<>();
-    SearchAdapter adapter = new SearchAdapter(items);
+    SearchAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -59,7 +59,6 @@ public class SearchActivity extends AppCompatActivity  {
             dao.getAllUsers(me.getUname(), user ->
             {
                 items.add(user);
-                Log.d("Users", "User: "+user.getUname());
                 adapter.notifyDataSetChanged();
             });
             tvFilter.setText("...");
@@ -73,7 +72,7 @@ public class SearchActivity extends AppCompatActivity  {
 
         RecyclerView recyclerView = findViewById(R.id.searchRecyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager (this));
-
+        adapter = new SearchAdapter(this, items, me);
         recyclerView.setAdapter(adapter);
 
         dao.getAllUsers(me.getUname(), user ->

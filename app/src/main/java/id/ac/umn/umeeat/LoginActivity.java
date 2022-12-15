@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    Toast.makeText(LoginActivity.this, "Email belum verified, In case yang lama expired, kita kirim email baru.\ncoba cek email...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Email belum verified, In case yang lama expired, kita kirim email baru.\ncoba cek email, di spam mungkin?...", Toast.LENGTH_SHORT).show();
                                     fbUser.sendEmailVerification();
                                     FirebaseAuth.getInstance().signOut();
                                 }
@@ -82,12 +81,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
+        tvRegister.setOnClickListener(view -> {
+            finish();
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
 

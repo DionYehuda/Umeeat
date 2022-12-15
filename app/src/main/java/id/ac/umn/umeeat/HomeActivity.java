@@ -51,11 +51,11 @@ public class HomeActivity extends AppCompatActivity {
         greet.setText("Hey, "+me.getUname()+"!\nWho are you eating with today?");
 
         //Add chat rooms
-        dao.chatIterate(me.getUname(), user -> {
-            friends.add(user);
-            lastChat.add("okee, hari kamis ya");
-            chatAdapter.notifyDataSetChanged();
-        });
+//        dao.chatIterate(me.getUname(), user -> {
+//            friends.add(user);
+//            lastChat.add("okee, hari kamis ya");
+//            chatAdapter.notifyDataSetChanged();
+//        });
 
         //Footer Intents
 //        toHome.setOnClickListener(view -> {
@@ -88,4 +88,14 @@ public class HomeActivity extends AppCompatActivity {
                     finish();
                 }
             });
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dao.chatIterate(me.getUname(), user -> {
+            friends.add(user);
+            lastChat.add("okee, hari kamis ya");
+            chatAdapter.notifyDataSetChanged();
+        });
+    }
 }

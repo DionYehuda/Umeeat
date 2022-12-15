@@ -26,6 +26,7 @@
         android:background="@drawable/background_received_message"
         android:padding="12dp"
         android:textColor="@color/black"
+        android:textIsSelectable="true"
         app:layout_constraintStart_toEndOf="@id/spacechat"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.75"/>
