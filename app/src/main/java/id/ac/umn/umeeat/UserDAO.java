@@ -115,7 +115,7 @@ public class UserDAO {
                 for (DataSnapshot snap: snapshot.getChildren())
                 {
                     String chatRoom = snap.getKey();
-                    if(chatRoom.contains(username))
+                    if(chatRoom.contains(username+"&")||chatRoom.contains("&"+username))
                     {
                         String[] temp = chatRoom.split("&");
                         List<String> chatMembers = Arrays.asList(temp);

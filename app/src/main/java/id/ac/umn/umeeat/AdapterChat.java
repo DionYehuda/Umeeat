@@ -1,13 +1,15 @@
 package id.ac.umn.umeeat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +25,10 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Bitmap photo;
     User me;
     String friendname;
+    Context context;
 
     public AdapterChat(Context context, List<String> listSent, List<String>listReceive, Bitmap photo){
+        this.context = context;
         this.listSent = listSent;
         this.listReceive = listReceive;
         this.photo = photo;
@@ -44,6 +48,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public AdapterChat(Context context, List<String> listSent, List<String>listReceive, User me, String friendname){
+        this.context = context;
         this.listSent = listSent;
         this.listReceive = listReceive;
         this.me = me;
@@ -90,7 +95,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        layoutInflater = layoutInflater.from(parent.getContext());
+        layoutInflater = LayoutInflater.from(parent.getContext());
         View view;
         if(viewType == 0 ){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
@@ -131,23 +136,43 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-    class HolderDataOne extends RecyclerView.ViewHolder{
+    class HolderDataOne extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
         TextView tvsent;
 
         public HolderDataOne(@NonNull View itemView) {
             super(itemView);
             tvsent = itemView.findViewById(R.id.tvMessage);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("copy", tvsent.getText().toString());
+            cm.setPrimaryClip(clip);
+            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
+            return true;
         }
     }
 
-    class HolderDataTwo extends RecyclerView.ViewHolder{
+    class HolderDataTwo extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
         TextView tvreceive;
 
         public HolderDataTwo(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("copy", tvreceive.getText().toString());
+            cm.setPrimaryClip(clip);
+            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
+            return true;
         }
     }
 
