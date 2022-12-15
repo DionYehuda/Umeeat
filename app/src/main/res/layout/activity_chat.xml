@@ -11,7 +11,7 @@
 <!--        android:id="@+id/gambar"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"/>-->
-    
+
     <FrameLayout
         android:id="@+id/layoutPhoto"
         android:layout_width="40dp"
@@ -53,11 +53,12 @@
         android:id="@+id/btnSent"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="12dp"
         android:background="@drawable/bgchat"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/layoutLocation">
+        app:layout_constraintEnd_toStartOf="@+id/layoutLocation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
