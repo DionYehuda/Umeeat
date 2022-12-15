@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     User me;
     String friendname;
     Context context;
+    String longitude, latitude;
 
     public AdapterChat(Context context, List<String> listMessage, Bitmap photo){
         this.context = context;
@@ -53,8 +55,12 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if (arrofstr[0].equals(friendname)) {
                     return 1;
                 }
-            }else if (arrofstr[0].equals("meMaps")) {
-                    return 2;
+            }else if (arrofstr[1].equals("Maps")) {
+                if (arrofstr[0].equals(me.getUname())) {
+                    return 0;
+                } else if (arrofstr[0].equals(friendname)) {
+                    return 1;
+                }
             }
         }
         return 3;
@@ -105,10 +111,18 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if (arrofstr[1].equals("Maps")) {
                 if (arrofstr[0].equals(me.getUname())) {
                     id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne = (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
-                    holderDataOne.tvsent.setText(arrofstr[2]);
+                    String[] location = arrofstr[2].split(":", 4);
+                    longitude = location[1];
+                    latitude = location[3];
+                    holderDataOne.tvsent.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataOne.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
                 } else if (arrofstr[0].equals(friendname)) {
                     id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
-                    holderDataTwo.tvreceive.setText(arrofstr[2]);
+                    String[] location = arrofstr[2].split(":", 4);
+                    longitude = location[1];
+                    latitude = location[3];
+                    holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
                 }
             } else if (arrofstr[1].equals("meMpas")) {
                 id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
