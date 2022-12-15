@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -27,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -74,12 +71,9 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle(friendname);
-        getChat(new UserCallback() {
-            @Override
-            public void onCallback(User user) {
-                adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
-                rvChat.setAdapter(adapterChat);
-            }
+        getChat(user -> {
+            adapterChat = new AdapterChat(getApplicationContext(), listSent, listReceived, me, friendname);
+            rvChat.setAdapter(adapterChat);
         });
 
         btnSent = findViewById(R.id.btnSent);
@@ -145,6 +139,7 @@ public class ChatActivity extends AppCompatActivity {
                 return true;
             case R.id.otheruserprofile:
                 Intent intent = new Intent(ChatActivity.this, OtherUserProfileActivity.class);
+                intent.putExtra("friendUname", friendname);
                 startActivity(intent);
                 return true;
             default:
@@ -157,9 +152,10 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listSent.clear();
+                HomeActivity.friends.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     String chatId = snap.getKey();
-                    if(chatId.contains(me.getUname()) && chatId.contains(friendname))
+                    if(chatId.equals(me.getUname()+"&"+friendname) || chatId.equals(friendname+"&"+me.getUname()))
                     {
                         chatRoom = snap.getRef();
                         snap.getChildren();
@@ -171,6 +167,9 @@ public class ChatActivity extends AppCompatActivity {
                         return;
                     }
                 }
+                chatRoom = snapshot.getRef().child(me.getUname()+"&"+friendname);
+                myCallback.onCallback(me);
+                return;
             }
 
             @Override
