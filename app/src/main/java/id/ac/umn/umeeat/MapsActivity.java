@@ -122,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 DatabaseReference newChat;
-                String newchat = me.getUname()+":Maps:" + "longitude:" + strlongitude + " latitude:" + strlatitude;
+                String newchat = me.getUname()+":Maps:" + "longitude:" + strlongitude + ":latitude:" + strlatitude;
                 newChat = chatRef.child(itemcount+"");
                 newChat.setValue(newchat);
 //                chatActivity.listMessage.add(me.getUname()+":Maps:" + "longitude:" + strlongitude + " latitude:" + strlatitude);
