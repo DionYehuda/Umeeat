@@ -3,8 +3,10 @@ package id.ac.umn.umeeat;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    GoogleMap mMap;
 
     List<String> listMessage;
     LayoutInflater layoutInflater;
@@ -69,9 +74,9 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }else if (arrofstr[1].equals("Maps")) {
                 if (arrofstr[0].equals(me.getUname())) {
-                    return 0;
+                    return 2;
                 } else if (arrofstr[0].equals(friendname)) {
-                    return 1;
+                    return 3;
                 }
             }else if(arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
@@ -104,10 +109,12 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else if (viewType == 1){
             view = layoutInflater.inflate(R.layout.item_container_received, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
-        }
-        else if (viewType == 2){
+        }else if (viewType == 2){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
-            return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
+            return new AdapterChat.HolderDataMapSent(view);
+        }else if (viewType == 3){
+            view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
+            return new AdapterChat.HolderDataMapReceived(view);
         }else if (viewType == 4){
             view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto1(view);
@@ -135,21 +142,20 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if (arrofstr[1].equals("Maps")) {
                 if (arrofstr[0].equals(me.getUname())) {
-                    id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne = (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
+                    AdapterChat.HolderDataMapSent holderDataMapSent = (AdapterChat.HolderDataMapSent) holder;
                     String[] location = arrofstr[2].split(":", 4);
                     longitude = location[1];
                     latitude = location[3];
-                    holderDataOne.tvsent.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
-                    holderDataOne.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
+                    holderDataMapSent.tvsent.setText("https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude);
+                    holderDataMapSent.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
                 } else if (arrofstr[0].equals(friendname)) {
-                    id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                    AdapterChat.HolderDataMapReceived holderDataMapReceived = (id.ac.umn.umeeat.AdapterChat.HolderDataMapReceived) holder;
                     String[] location = arrofstr[2].split(":", 4);
                     longitude = location[1];
                     latitude = location[3];
-                    holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
-                    holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
+                    holderDataMapReceived.tvreceive.setText("https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude);
+                    holderDataMapReceived.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
                 }
-                // hhehehehehe
             } else if (arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
                     try {
@@ -233,16 +239,41 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class HolderDataMapSent extends RecyclerView.ViewHolder{
+    class HolderDataMapSent extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView tvreceive;
+        TextView tvsent;
 
         public HolderDataMapSent(@NonNull View itemView) {
             super(itemView);
-            tvreceive = itemView.findViewById(R.id.tvReceive);
+            tvsent = itemView.findViewById(R.id.tvMessage);
+            tvsent.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(tvsent.getText().toString()));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
 
+    class HolderDataMapReceived extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        TextView tvreceive;
+
+        public HolderDataMapReceived(@NonNull View itemView) {
+            super(itemView);
+            tvreceive = itemView.findViewById(R.id.tvReceive);
+            tvreceive.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(tvreceive.getText().toString()));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
     class HolderDataPhoto1 extends RecyclerView.ViewHolder{
 
         ImageView ivphoto;

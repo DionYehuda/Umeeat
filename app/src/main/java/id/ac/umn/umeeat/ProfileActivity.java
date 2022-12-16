@@ -61,6 +61,11 @@ public class ProfileActivity extends AppCompatActivity {
                 setResult(RESULT_OK, logoutIntent);
                 finish();
                 return true;
+            case R.id.edit:
+                Intent editintent = new Intent(this, EditProfileActivity.class);
+                editintent.putExtra("me",me);
+                startActivity(editintent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
