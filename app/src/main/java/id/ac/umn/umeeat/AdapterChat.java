@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    GoogleMap mMap;
 
     List<String> listMessage;
     LayoutInflater layoutInflater;
@@ -69,9 +72,9 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }else if (arrofstr[1].equals("Maps")) {
                 if (arrofstr[0].equals(me.getUname())) {
-                    return 0;
+                    return 2;
                 } else if (arrofstr[0].equals(friendname)) {
-                    return 1;
+                    return 3;
                 }
             }else if(arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
@@ -104,10 +107,12 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else if (viewType == 1){
             view = layoutInflater.inflate(R.layout.item_container_received, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
-        }
-        else if (viewType == 2){
+        }else if (viewType == 2){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
-            return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
+            return new AdapterChat.HolderDataMapSent(view);
+        }else if (viewType == 3){
+            view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
+            return new AdapterChat.HolderDataMapReceived(view);
         }else if (viewType == 4){
             view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto1(view);
@@ -135,20 +140,21 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if (arrofstr[1].equals("Maps")) {
                 if (arrofstr[0].equals(me.getUname())) {
-                    id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne = (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
+                    AdapterChat.HolderDataMapSent holderDataMapSent = (AdapterChat.HolderDataMapSent) holder;
                     String[] location = arrofstr[2].split(":", 4);
                     longitude = location[1];
                     latitude = location[3];
-                    holderDataOne.tvsent.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
-                    holderDataOne.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
+                    holderDataMapSent.tvsent.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataMapSent.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
                 } else if (arrofstr[0].equals(friendname)) {
-                    id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                    AdapterChat.HolderDataMapReceived holderDataMapReceived = (id.ac.umn.umeeat.AdapterChat.HolderDataMapReceived) holder;
                     String[] location = arrofstr[2].split(":", 4);
                     longitude = location[1];
                     latitude = location[3];
-                    holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
-                    holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
+                    holderDataMapReceived.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataMapReceived.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
                 }
+                // hhehehehehe
             } else if (arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
                     try {
@@ -172,7 +178,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if (arrofstr[0].equals(friendname)){
                     try {
                         String filepath[] = arrofstr[2].split("/", 3);
-                        String filename[] = filepath[2].split(".", 2);
+                        String filename[] = filepath[2].split("\\.", 2);
                         final File localFile = File.createTempFile(filename[0], "jpg");
                         mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
                         mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -234,14 +240,23 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class HolderDataMapSent extends RecyclerView.ViewHolder{
 
-        TextView tvreceive;
+        TextView tvsent;
 
         public HolderDataMapSent(@NonNull View itemView) {
+            super(itemView);
+            tvsent = itemView.findViewById(R.id.tvMessage);
+        }
+    }
+
+    class HolderDataMapReceived extends RecyclerView.ViewHolder{
+
+        TextView tvreceive;
+
+        public HolderDataMapReceived(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
         }
     }
-
     class HolderDataPhoto1 extends RecyclerView.ViewHolder{
 
         ImageView ivphoto;
