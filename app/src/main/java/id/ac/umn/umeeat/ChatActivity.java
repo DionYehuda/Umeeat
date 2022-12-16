@@ -20,8 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,21 +152,14 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void uploadToFirebase(byte[] bb){
         StorageReference sr = mStorageRef.child("images/" +  chatId + "/" + me.getUname() + itemcount + ".jpg" );
-        DatabaseReference newChat;
-        String newchat = me.getUname() + ":Foto:images/"+ chatId + "/" + me.getUname() + itemcount + ".jpg";
-        newChat = chatRoom.child(itemcount+"");
-        newChat.setValue(newchat);
-        sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(ChatActivity.this, "Berhasil di upload", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ChatActivity.this, "Gagal di upload", Toast.LENGTH_SHORT).show();
-            }
-        });
+        sr.putBytes(bb).addOnSuccessListener(taskSnapshot -> {
+//                Toast.makeText(ChatActivity.this, "Berhasil di upload", Toast.LENGTH_SHORT).show();
+            DatabaseReference newChat;
+            String newchat = me.getUname() + ":Foto:images/"+ chatId + "/" + me.getUname() + itemcount + ".jpg";
+            newChat = chatRoom.child(itemcount+"");
+            newChat.setValue(newchat);
+            adapterChat.notifyDataSetChanged();
+        }).addOnFailureListener(e -> Toast.makeText(ChatActivity.this, "Gagal di upload", Toast.LENGTH_SHORT).show());
     }
 
 

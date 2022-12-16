@@ -13,6 +13,7 @@
         android:background="@drawable/background_sent_message"
         android:padding="12dp"
         android:textColor="@color/black"
+        android:textIsSelectable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintWidth_percent="0.8"/>
@@ -23,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/black"
-        android:textIsSelectable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMessage"/>
 
