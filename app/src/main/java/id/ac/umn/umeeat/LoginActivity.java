@@ -48,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
             if(username.isEmpty() || password.isEmpty())
                 Toast.makeText(LoginActivity.this, "Username dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             else{
-
-
                 dao.loginIterate(username, password, user -> {
                     if(user != null){
                         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPass()).addOnCompleteListener(this, task -> {
