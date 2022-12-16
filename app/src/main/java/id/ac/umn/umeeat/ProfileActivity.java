@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,9 +51,19 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    ActivityResultLauncher<Intent> arl = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    assert result.getData() != null;
+                    me = (User) result.getData().getSerializableExtra("me");
+                    desc.setText(me.getDesc());
+                }
+            });
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        Intent intent;
         switch(item.getItemId()){
             case android.R.id.home:
                 finish();
@@ -63,8 +76,8 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             case R.id.edit:
                 Intent editintent = new Intent(this, EditProfileActivity.class);
-                editintent.putExtra("me",me);
-                startActivity(editintent);
+                editintent.putExtra("me", me);
+                arl.launch(editintent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,7 +1,5 @@
 package id.ac.umn.umeeat;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,8 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -45,14 +41,14 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private StorageReference mStorageRef;
     Bitmap bitmap;
 
-    public AdapterChat(Context context, List<String> listMessage,User me, String friendname, Bitmap photo){
+    public AdapterChat(Context context, List<String> listMessage, User me, String friendname, Bitmap photo){
         this.context = context;
         this.listMessage = listMessage;
         this.me = me;
         this.friendname = friendname;
         this.photo = photo;
         listphoto.add(photo);
-        listMessage = new ArrayList<>();
+        this.listMessage = listMessage;
     }
 
     public AdapterChat(Context context, List<String> listMessage, User me, String friendname){
@@ -110,10 +106,10 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             view = layoutInflater.inflate(R.layout.item_container_received, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
         }else if (viewType == 2){
-            view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
+            view = layoutInflater.inflate(R.layout.item_container_map_sent, parent, false);
             return new AdapterChat.HolderDataMapSent(view);
         }else if (viewType == 3){
-            view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
+            view = layoutInflater.inflate(R.layout.item_container_map_received, parent, false);
             return new AdapterChat.HolderDataMapReceived(view);
         }else if (viewType == 4){
             view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
@@ -159,36 +155,30 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if (arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
                     try {
-                        String filepath[] = arrofstr[2].split("/", 3);
-                        String filename[] = filepath[2].split("\\.", 2);
+                        String[] filepath = arrofstr[2].split("/", 3);
+                        String[] filename = filepath[2].split("\\.", 2);
                         Log.d("dion", filename[1]);
                         Log.d("dion", filepath[2]);
                         final File localFile = File.createTempFile(filename[0], "jpg");
                         mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
-                        mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                AdapterChat.HolderDataPhoto1 holderDataPhoto1 = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto1) holder;
-                                holderDataPhoto1.ivphoto.setImageBitmap(bitmap);
-                            }
+                        mStorageRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            HolderDataPhoto1 holderDataPhoto1 = (HolderDataPhoto1) holder;
+                            holderDataPhoto1.ivphoto.setImageBitmap(bitmap);
                         });
                     } catch (IOException e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (arrofstr[0].equals(friendname)){
                     try {
-                        String filepath[] = arrofstr[2].split("/", 3);
-                        String filename[] = filepath[2].split("\\.", 2);
+                        String[] filepath = arrofstr[2].split("/", 3);
+                        String[] filename = filepath[2].split("\\.", 2);
                         final File localFile = File.createTempFile(filename[0], "jpg");
                         mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
-                        mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                AdapterChat.HolderDataPhoto2 holderDataPhoto2 = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto2) holder;
-                                holderDataPhoto2.ivphoto.setImageBitmap(bitmap);
-                            }
+                        mStorageRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            HolderDataPhoto2 holderDataPhoto2 = (HolderDataPhoto2) holder;
+                            holderDataPhoto2.ivphoto.setImageBitmap(bitmap);
                         });
                     } catch (IOException e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -199,44 +189,44 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    class HolderDataOne extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+    class HolderDataOne extends RecyclerView.ViewHolder{
 
         TextView tvsent;
 
         public HolderDataOne(@NonNull View itemView) {
             super(itemView);
             tvsent = itemView.findViewById(R.id.tvMessage);
-            itemView.setOnLongClickListener(this);
+//            itemView.setOnLongClickListener(this);
         }
 
-        @Override
-        public boolean onLongClick(View view) {
-            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("copy", tvsent.getText().toString());
-            cm.setPrimaryClip(clip);
-            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        @Override
+//        public boolean onLongClick(View view) {
+//            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//            ClipData clip = ClipData.newPlainText("copy", tvsent.getText().toString());
+//            cm.setPrimaryClip(clip);
+//            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
     }
 
-    class HolderDataTwo extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+    class HolderDataTwo extends RecyclerView.ViewHolder{
 
         TextView tvreceive;
 
         public HolderDataTwo(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
-            itemView.setOnLongClickListener(this);
+//            itemView.setOnLongClickListener(this);
         }
 
-        @Override
-        public boolean onLongClick(View view) {
-            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("copy", tvreceive.getText().toString());
-            cm.setPrimaryClip(clip);
-            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        @Override
+//        public boolean onLongClick(View view) {
+//            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//            ClipData clip = ClipData.newPlainText("copy", tvreceive.getText().toString());
+//            cm.setPrimaryClip(clip);
+//            Toast.makeText(context, "Text copied", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
     }
 
     class HolderDataMapSent extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -246,7 +236,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public HolderDataMapSent(@NonNull View itemView) {
             super(itemView);
             tvsent = itemView.findViewById(R.id.tvMessage);
-            tvsent.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {
@@ -264,7 +254,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public HolderDataMapReceived(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
-            tvreceive.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {

@@ -17,10 +17,10 @@ import java.util.LinkedList;
 
 public class HomeActivity extends AppCompatActivity {
 
-//    private static final LinkedList<Chat> friendChats = new LinkedList<>();
+    //    private static final LinkedList<Chat> friendChats = new LinkedList<>();
     public static final LinkedList<User> friends = new LinkedList<>();
-    private static final LinkedList<String> lastChat = new LinkedList<>();
-//    private static boolean initRun = true;
+    public static final LinkedList<String> lastChat = new LinkedList<>();
+    //    private static boolean initRun = true;
     private ImageButton toHome, toSearch, toProfile;
     private TextView greet;
     private RecyclerView chatListView;
@@ -29,14 +29,14 @@ public class HomeActivity extends AppCompatActivity {
     private UserDAO dao = new UserDAO();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setBackgroundDrawable(getDrawable(R.drawable.toolbar_frame));
         getSupportActionBar().setTitle("Home");
-        chatListView =findViewById(R.id.chatrecyclerview);
+        chatListView = findViewById(R.id.chatrecyclerview);
 
         toHome = findViewById(R.id.ibMessage);
         toSearch = findViewById(R.id.ibSearch);
@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
         chatListView.setLayoutManager(new LinearLayoutManager(this));
 
         greet = findViewById(R.id.greeting);
-        greet.setText("Hey, "+me.getUname()+"!\nWho are you eating with today?");
+        greet.setText("Hey, " + me.getUname() + "!\nWho are you eating with today?");
 
         //Add chat rooms
 //        dao.chatIterate(me.getUname(), user -> {
@@ -92,10 +92,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        dao.chatIterate(me.getUname(), user -> {
-            friends.add(user);
-            lastChat.add("okee, hari kamis ya");
-            chatAdapter.notifyDataSetChanged();
+        dao.chatIterate(me.getUname(), user ->
+        {
+            dao.getLastChats(me.getUname(), user.getUname(), newChat -> {
+                friends.add(user);
+                lastChat.add(newChat);
+                chatAdapter.notifyDataSetChanged();
+            });
         });
     }
 }

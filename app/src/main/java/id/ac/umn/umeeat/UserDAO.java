@@ -22,7 +22,6 @@ public class UserDAO {
         chatRef = db.getReference("Chat");
     }
 
-//    ga perlu async maybe
     public Task<Void> add (User ur, String uid)
     {
         DatabaseReference newUser;
@@ -33,6 +32,29 @@ public class UserDAO {
         }
         else
             return null;
+    }
+
+    public void updateDesc(String username, String desc)
+    {
+        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    User user = snap.getValue(User.class);
+                    if(username.equalsIgnoreCase(user.getUname()))
+                    {
+                        snap.getRef().child("desc").setValue(desc);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void checkIfUnique(String username, FoundCallback myCallback)
@@ -50,7 +72,6 @@ public class UserDAO {
                     }
                 }
                 myCallback.onCallback(true);
-                return;
             }
 
             @Override
@@ -106,12 +127,13 @@ public class UserDAO {
         });
     }
 
-    public void chatIterate(String username, UserCallback myCallback)
+    public void chatIterate(String username, UserCallback myUserCallback)
     {
         chatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HomeActivity.friends.clear();
+                HomeActivity.lastChat.clear();
                 for (DataSnapshot snap: snapshot.getChildren())
                 {
                     String chatRoom = snap.getKey();
@@ -125,7 +147,84 @@ public class UserDAO {
                             if(!chatMembers.get(i).equalsIgnoreCase(username))
                             {
                                 chatPartner = chatMembers.get(i);
-                                userIterate(chatPartner, myCallback);
+                                userIterate(chatPartner, myUserCallback);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void getLastChats(String username, String friendname, ChatCallback myChatCallback)
+    {
+        chatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap: snapshot.getChildren())
+                {
+                    String chatRoom = snap.getKey();
+                    if(chatRoom.equals(username+"&"+friendname) || chatRoom.equals(friendname+"&"+username))
+                    {
+                        String[] temp = chatRoom.split("&");
+                        List<String> chatMembers = Arrays.asList(temp);
+                        for (int i = 0; i<chatMembers.size(); i++)
+                        {
+                            if(!chatMembers.get(i).equalsIgnoreCase(username))
+                            {
+                                Query lastQuery = snap.getRef().orderByKey().limitToLast(1);
+                                lastQuery.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot data : snapshot.getChildren())
+                                        {
+                                            String[] arrofstr = data.getValue(String.class).split(":", 3);
+                                            String lastChat;
+                                            if (arrofstr[1].equals("Text"))
+                                            {
+                                                lastChat = arrofstr[2];
+                                                myChatCallback.onCallback(lastChat);
+                                            }
+                                            else if(arrofstr[1].equals("Maps"))
+                                            {
+                                                if(arrofstr[0].equals(username))
+                                                {
+                                                    lastChat = "Your Location";
+                                                    myChatCallback.onCallback(lastChat);
+                                                }
+                                                else if(arrofstr[0].equals(friendname))
+                                                {
+                                                    lastChat = friendname + "'s Location";
+                                                    myChatCallback.onCallback(lastChat);
+                                                }
+                                            }
+                                            else if(arrofstr[1].equals("Foto"))
+                                            {
+                                                if(arrofstr[0].equals(username))
+                                                {
+                                                    lastChat = "You sent a Photo";
+                                                    myChatCallback.onCallback(lastChat);
+                                                }
+                                                else if(arrofstr[0].equals(friendname))
+                                                {
+                                                    lastChat = friendname + " sent a photo";
+                                                    myChatCallback.onCallback(lastChat);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                                 break;
                             }
                         }
