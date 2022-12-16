@@ -172,7 +172,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if (arrofstr[0].equals(friendname)){
                     try {
                         String filepath[] = arrofstr[2].split("/", 3);
-                        String filename[] = filepath[2].split(".", 2);
+                        String filename[] = filepath[2].split("\\.", 2);
                         final File localFile = File.createTempFile(filename[0], "jpg");
                         mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
                         mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
