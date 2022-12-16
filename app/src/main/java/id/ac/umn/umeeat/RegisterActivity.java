@@ -79,52 +79,54 @@ public class RegisterActivity extends AppCompatActivity {
             descIn = desc.getText().toString().trim();
             genderIn = gender.getText().toString();
             Activity curr = this;
-
             if (emailIn.isEmpty() || passIn.isEmpty() || namaIn.isEmpty() || yearIn.isEmpty() || jurusanIn.isEmpty() || unameIn.isEmpty() || descIn.isEmpty() || genderIn.isEmpty())
                 Toast.makeText(RegisterActivity.this, "Data input tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             else {
-                dao.checkIfUnique(unameIn, unique -> {
-                    if(unique)
-                    {
-                        mAuth.createUserWithEmailAndPassword(emailIn, passIn).addOnCompleteListener(curr, task -> {
-                            if (task.isSuccessful()) {
-                                mUser = mAuth.getCurrentUser();
-                                mUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(unameIn).build());
-                                uidIn = mUser.getUid();
-                                if(mUser != null)
-                                {
-                                    Toast.makeText(RegisterActivity.this, "Email Verifikasi telah dikirim, cek di student email untuk konfirmasi\n!Kalau gaada di inbox, coba cek spam!", Toast.LENGTH_LONG).show();
-                                    mUser.sendEmailVerification().addOnCompleteListener(task1 -> {
-                                        if(task1.isSuccessful())
-                                        {
-                                            User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
-                                            dao.add(user, uidIn).addOnSuccessListener(succ -> {
+                if(unameIn.matches("^[0-9a-zA-Z_]+$")){
+                    dao.checkIfUnique(unameIn, unique -> {
+                        if(unique)
+                        {
+                            mAuth.createUserWithEmailAndPassword(emailIn, passIn).addOnCompleteListener(curr, task -> {
+                                if (task.isSuccessful()) {
+                                    mUser = mAuth.getCurrentUser();
+                                    mUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(unameIn).build());
+                                    uidIn = mUser.getUid();
+                                    if(mUser != null)
+                                    {
+                                        Toast.makeText(RegisterActivity.this, "Email Verifikasi telah dikirim, cek di student email untuk konfirmasi\n!Kalau gaada di inbox, coba cek spam!", Toast.LENGTH_LONG).show();
+                                        mUser.sendEmailVerification().addOnCompleteListener(task1 -> {
+                                            if(task1.isSuccessful())
+                                            {
+                                                User user = new User(emailIn, passIn, namaIn, yearIn, jurusanIn, unameIn, descIn, genderIn);
+                                                dao.add(user, uidIn).addOnSuccessListener(succ -> {
+                                                    finish();
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
+                                                    startActivity(toLogin);
+                                                }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
+                                            }
+                                            else
+                                            {
+                                                overridePendingTransition(0, 0);
                                                 finish();
-                                                FirebaseAuth.getInstance().signOut();
-                                                Intent toLogin = new Intent(RegisterActivity.this, LoginActivity.class);
-                                                startActivity(toLogin);
-                                            }).addOnFailureListener(er -> Toast.makeText(RegisterActivity.this, "Unable to add user. Please check and try again", Toast.LENGTH_LONG).show());
-                                        }
-                                        else
-                                        {
-                                            overridePendingTransition(0, 0);
-                                            finish();
-                                            overridePendingTransition(0, 0);
-                                            startActivity(getIntent());
-                                        }
-                                    });
+                                                overridePendingTransition(0, 0);
+                                                startActivity(getIntent());
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                    else
-                    {
-                        Toast.makeText(RegisterActivity.this, "Username sudah digunakan", Toast.LENGTH_LONG).show();
-                    }
-                });
+                            });
+                        }
+                        else
+                        {
+                            Toast.makeText(RegisterActivity.this, "Username sudah digunakan", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else
+                    Toast.makeText(RegisterActivity.this, "Username tidak valid \n Hanya gunakan alphanumeric dan underscore", Toast.LENGTH_LONG).show();
             }
         });
     }
