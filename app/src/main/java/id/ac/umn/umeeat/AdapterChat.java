@@ -149,6 +149,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
                     holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
                 }
+                // hhehehehehe
             } else if (arrofstr[1].equals("Foto")){
                 if (arrofstr[0].equals(me.getUname())) {
                     try {
