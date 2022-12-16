@@ -1,5 +1,6 @@
 package id.ac.umn.umeeat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,12 +20,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +49,18 @@ public class ChatActivity extends AppCompatActivity {
     private User me;
     private DatabaseReference chatRef, chatRoom;
     protected String chatId;
+    private StorageReference mStorageRef;
+    private byte bb[];
+    private int itemcount;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getChat(user -> {
+            adapterChat = new AdapterChat(getApplicationContext(), listMessage, me, friendname);
+            rvChat.setAdapter(adapterChat);
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +74,10 @@ public class ChatActivity extends AppCompatActivity {
         //database
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         chatRef = db.getReference("Chat");
-
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         listMessage = new ArrayList<>();
 
-//        Seed();
         rvChat = findViewById(R.id.rvChat);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvChat.setLayoutManager(linearLayoutManager);
@@ -87,12 +107,15 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        gambar = findViewById(R.id.gambar);
+//        gambar = findViewById(R.id.ivPhoto);
         btnGambar = findViewById(R.id.layoutPhoto);
         btnGambar.setOnClickListener(view -> {
             Intent takePictureIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null)
-                startActivityForResult(takePictureIntent, 1);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                itemcount = adapterChat.getItemCount();
+                startActivityForResult(takePictureIntent, 101);
+                adapterChat.notifyDataSetChanged();
+            }
         });
 
         btnMaps = findViewById(R.id.layoutLocation);
@@ -109,22 +132,47 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle extras = data.getExtras();
-        Bitmap imageBitmap = (Bitmap) extras.get("data");
-        adapterChat = new AdapterChat(getApplicationContext(), listMessage, imageBitmap);
-        rvChat.setAdapter(adapterChat);
-        adapterChat.notifyDataSetChanged();
+
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == 101){
+                onCaptureImageResult(data);
+            }
+            uploadToFirebase(bb);
+
+        }
+//        Bundle extras = data.getExtras();
+//        Bitmap imageBitmap = (Bitmap) extras.get("data");
+//        adapterChat = new AdapterChat(getApplicationContext(), listMessage, me, friendname, imageBitmap);
+//        rvChat.setAdapter(adapterChat);
+//        adapterChat.notifyDataSetChanged();
 //        gambar.setImageBitmap(imageBitmap);
     }
 
-//    protected void Seed(){
-//        listSent.add("me:Halo boleh kenalan ga?");
-//        listReceived.add("other:Boleh");
-//        listSent.add("me:Mau makan bareng ga hari kamis?");
-//        listReceived.add("other:boleeh, dimana?");
-//        listSent.add("me:di MCD SDC aja oke ga?");
-//        listReceived.add("other:okee, hari kamis ya");
-//    }
+    private void onCaptureImageResult(Intent data){
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        bb = bytes.toByteArray();
+    }
+    private void uploadToFirebase(byte[] bb){
+        StorageReference sr = mStorageRef.child("images/" +  chatId + "/" + me.getUname() + itemcount + ".jpg" );
+        DatabaseReference newChat;
+        String newchat = me.getUname() + ":Foto:images/"+ chatId + "/" + me.getUname() + itemcount + ".jpg";
+        newChat = chatRoom.child(itemcount+"");
+        newChat.setValue(newchat);
+        sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(ChatActivity.this, "Berhasil di upload", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ChatActivity.this, "Gagal di upload", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){

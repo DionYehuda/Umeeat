@@ -4,7 +4,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +37,14 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     String friendname;
     Context context;
     String longitude, latitude;
+    private StorageReference mStorageRef;
+    Bitmap bitmap;
 
-    public AdapterChat(Context context, List<String> listMessage, Bitmap photo){
+    public AdapterChat(Context context, List<String> listMessage,User me, String friendname, Bitmap photo){
         this.context = context;
         this.listMessage = listMessage;
+        this.me = me;
+        this.friendname = friendname;
         this.photo = photo;
         listphoto.add(photo);
         listMessage = new ArrayList<>();
@@ -42,7 +55,6 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.listMessage = listMessage;
         this.me = me;
         this.friendname = friendname;
-        listMessage = new ArrayList<>();
     }
 
     public int getItemViewType(int position){
@@ -60,6 +72,12 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     return 0;
                 } else if (arrofstr[0].equals(friendname)) {
                     return 1;
+                }
+            }else if(arrofstr[1].equals("Foto")){
+                if (arrofstr[0].equals(me.getUname())) {
+                    return 4;
+                } else if (arrofstr[0].equals(friendname)) {
+                    return 5;
                 }
             }
         }
@@ -90,9 +108,16 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         else if (viewType == 2){
             view = layoutInflater.inflate(R.layout.item_container_sent, parent, false);
             return new id.ac.umn.umeeat.AdapterChat.HolderDataTwo(view);
+        }else if (viewType == 4){
+            view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
+            return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto1(view);
+        }
+        else if (viewType == 5){
+            view = layoutInflater.inflate(R.layout.item_container_received_photo, parent, false);
+            return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto2(view);
         }
         view = layoutInflater.inflate(R.layout.item_container_sent_photo, parent, false);
-        return new id.ac.umn.umeeat.AdapterChat.HolderDataPhoto(view);
+        return new AdapterChat.HolderDataMapSent(view);
     }
 
     @Override
@@ -124,12 +149,44 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
                     holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
                 }
-            } else if (arrofstr[1].equals("meMpas")) {
-                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
-                holderDataTwo.tvreceive.setText(arrofstr[2]);
-            } else if (arrofstr[1].equals("Foto")) {
-                id.ac.umn.umeeat.AdapterChat.HolderDataPhoto holderDataPhoto = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto) holder;
-                holderDataPhoto.ivphoto.setImageBitmap(photo);
+            } else if (arrofstr[1].equals("Foto")){
+                if (arrofstr[0].equals(me.getUname())) {
+                    try {
+                        String filepath[] = arrofstr[2].split("/", 3);
+                        String filename[] = filepath[2].split("\\.", 2);
+                        Log.d("dion", filename[1]);
+                        Log.d("dion", filepath[2]);
+                        final File localFile = File.createTempFile(filename[0], "jpg");
+                        mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
+                        mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                AdapterChat.HolderDataPhoto1 holderDataPhoto1 = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto1) holder;
+                                holderDataPhoto1.ivphoto.setImageBitmap(bitmap);
+                            }
+                        });
+                    } catch (IOException e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else if (arrofstr[0].equals(friendname)){
+                    try {
+                        String filepath[] = arrofstr[2].split("/", 3);
+                        String filename[] = filepath[2].split(".", 2);
+                        final File localFile = File.createTempFile(filename[0], "jpg");
+                        mStorageRef = FirebaseStorage.getInstance().getReference().child(arrofstr[2]);
+                        mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                AdapterChat.HolderDataPhoto2 holderDataPhoto2 = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto2) holder;
+                                holderDataPhoto2.ivphoto.setImageBitmap(bitmap);
+                            }
+                        });
+                    } catch (IOException e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
     }
@@ -185,11 +242,21 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class HolderDataPhoto extends RecyclerView.ViewHolder{
+    class HolderDataPhoto1 extends RecyclerView.ViewHolder{
 
         ImageView ivphoto;
 
-        public HolderDataPhoto(@NonNull View itemView) {
+        public HolderDataPhoto1(@NonNull View itemView) {
+            super(itemView);
+            ivphoto = itemView.findViewById(R.id.ivPhoto);
+        }
+    }
+
+    class HolderDataPhoto2 extends RecyclerView.ViewHolder{
+
+        ImageView ivphoto;
+
+        public HolderDataPhoto2(@NonNull View itemView) {
             super(itemView);
             ivphoto = itemView.findViewById(R.id.ivPhoto);
         }
