@@ -32,4 +32,5 @@
         <item>Perempuan</item>
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="googlemaplink"><a href="https://www.google.com/maps/search/?api=&amp;query="/></string>
 </resources>

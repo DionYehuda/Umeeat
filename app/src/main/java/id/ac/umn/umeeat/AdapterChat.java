@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,68 +20,50 @@ import java.util.List;
 
 public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<String> listSent, listReceive, listMessage;
+    List<String> listMessage;
     LayoutInflater layoutInflater;
     List<Bitmap> listphoto = new ArrayList<>();
     Bitmap photo;
     User me;
     String friendname;
     Context context;
+    String longitude, latitude;
 
-    public AdapterChat(Context context, List<String> listSent, List<String>listReceive, Bitmap photo){
+    public AdapterChat(Context context, List<String> listMessage, Bitmap photo){
         this.context = context;
-        this.listSent = listSent;
-        this.listReceive = listReceive;
+        this.listMessage = listMessage;
         this.photo = photo;
         listphoto.add(photo);
         listMessage = new ArrayList<>();
-
-        for(int i = 0; i<listReceive.size()+listSent.size(); i++){
-            if(i < listSent.size())
-                if(!listSent.get(i).isEmpty()){
-                    listMessage.add(listSent.get(i));
-                }
-            if(i<listReceive.size())
-                if(!listReceive.get(i).isEmpty()){
-                    listMessage.add(listReceive.get(i));
-                }
-        }
     }
 
-    public AdapterChat(Context context, List<String> listSent, List<String>listReceive, User me, String friendname){
+    public AdapterChat(Context context, List<String> listMessage, User me, String friendname){
         this.context = context;
-        this.listSent = listSent;
-        this.listReceive = listReceive;
+        this.listMessage = listMessage;
         this.me = me;
         this.friendname = friendname;
         listMessage = new ArrayList<>();
-
-        for(int i = 0; i<listReceive.size()+listSent.size(); i++){
-            if(i < listSent.size())
-                if(!listSent.get(i).isEmpty()){
-                    listMessage.add(listSent.get(i));
-                }
-            if(i < listReceive.size())
-                if(!listReceive.get(i).isEmpty()){
-                    listMessage.add(listReceive.get(i));
-                }
-        }
     }
 
     public int getItemViewType(int position){
-        if(position < listMessage.size()){
+        if(position < listMessage.size()) {
             String str = listMessage.get(position);
-            String[] arrofstr = str.split(":",2);
-            if(arrofstr[0].equals(me.getUname())){
-                return 0;
-            }else if(arrofstr[0].equals(friendname)){
-                return 1;
-            }else if(arrofstr[0].equals("meMaps")){
-                return 2;
+            String[] arrofstr = str.split(":", 3);
+            if (arrofstr[1].equals("Text")) {
+                if (arrofstr[0].equals(me.getUname())) {
+                    return 0;
+                } else if (arrofstr[0].equals(friendname)) {
+                    return 1;
+                }
+            }else if (arrofstr[1].equals("Maps")) {
+                if (arrofstr[0].equals(me.getUname())) {
+                    return 0;
+                } else if (arrofstr[0].equals(friendname)) {
+                    return 1;
+                }
             }
         }
         return 3;
-
     }
 
     @Override
@@ -114,27 +97,43 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(position < listMessage.size() ){
+        if (position < listMessage.size()) {
             String str = listMessage.get(position);
-            String[] arrofstr = str.split(":",2);
-            if(arrofstr[0].equals(me.getUname())){
-                id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne =  (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
-                holderDataOne.tvsent.setText(arrofstr[1]);
-            } else if(arrofstr[0].equals(friendname)) {
-                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
-                holderDataTwo.tvreceive.setText(arrofstr[1]);
+            String[] arrofstr = str.split(":", 3);
+            if (arrofstr[1].equals("Text")) {
+                if (arrofstr[0].equals(me.getUname())) {
+                    id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne = (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
+                    holderDataOne.tvsent.setText(arrofstr[2]);
+                } else if (arrofstr[0].equals(friendname)) {
+                    id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                    holderDataTwo.tvreceive.setText(arrofstr[2]);
+                }
+            } else if (arrofstr[1].equals("Maps")) {
+                if (arrofstr[0].equals(me.getUname())) {
+                    id.ac.umn.umeeat.AdapterChat.HolderDataOne holderDataOne = (id.ac.umn.umeeat.AdapterChat.HolderDataOne) holder;
+                    String[] location = arrofstr[2].split(":", 4);
+                    longitude = location[1];
+                    latitude = location[3];
+                    holderDataOne.tvsent.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataOne.tvsent.setMovementMethod(LinkMovementMethod.getInstance());
+                } else if (arrofstr[0].equals(friendname)) {
+                    id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                    String[] location = arrofstr[2].split(":", 4);
+                    longitude = location[1];
+                    latitude = location[3];
+                    holderDataTwo.tvreceive.setText("<a href=\"https://www.google.com/maps/search/?api=1&query=\""+latitude+","+longitude+"/>google maps</a>");
+                    holderDataTwo.tvreceive.setMovementMethod(LinkMovementMethod.getInstance());
+                }
+            } else if (arrofstr[1].equals("meMpas")) {
+                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo = (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
+                holderDataTwo.tvreceive.setText(arrofstr[2]);
+            } else if (arrofstr[1].equals("Foto")) {
+                id.ac.umn.umeeat.AdapterChat.HolderDataPhoto holderDataPhoto = (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto) holder;
+                holderDataPhoto.ivphoto.setImageBitmap(photo);
             }
-            else if(arrofstr[0].equals("meMpas")){
-                id.ac.umn.umeeat.AdapterChat.HolderDataTwo holderDataTwo =  (id.ac.umn.umeeat.AdapterChat.HolderDataTwo) holder;
-                holderDataTwo.tvreceive.setText(arrofstr[1]);
-            }
-        }else{
-            id.ac.umn.umeeat.AdapterChat.HolderDataPhoto holderDataPhoto =  (id.ac.umn.umeeat.AdapterChat.HolderDataPhoto) holder;
-            holderDataPhoto.ivphoto.setImageBitmap(photo);
         }
-
-
     }
+
 
     class HolderDataOne extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
