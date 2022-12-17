@@ -236,7 +236,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public HolderDataMapSent(@NonNull View itemView) {
             super(itemView);
             tvsent = itemView.findViewById(R.id.tvMessage);
-            itemView.setOnClickListener(this);
+            tvsent.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {
@@ -254,7 +254,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public HolderDataMapReceived(@NonNull View itemView) {
             super(itemView);
             tvreceive = itemView.findViewById(R.id.tvReceive);
-            itemView.setOnClickListener(this);
+            tvreceive.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {
